@@ -4,7 +4,7 @@ setup(
     name='deeprag',
     version='0.0.1',
     py_modules=['deeprag'],
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests", "examples"]),
     install_requires=[
         'argparse',
     ],
