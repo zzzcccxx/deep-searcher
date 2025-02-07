@@ -1,14 +1,19 @@
+from abc import ABC
 import os
 from typing import List
 from langchain_core.documents import Document
 
 
-class BaseLoader:
+class BaseLoader(ABC):
     def __init__(self, **kwargs):
         pass
 
     def load_file(self, file_path: str) -> List[Document]:
         pass
+        # Return a list of Document objects which contain the text and metadata.
+        # In the metadata, it's recommended to include the reference to the file.
+        # e.g.
+        # return [Document(page_content=..., metadata={"reference": file_path})]
 
     def load_directory(self, directory: str) -> List[Document]:
             documents = []

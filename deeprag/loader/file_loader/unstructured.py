@@ -60,10 +60,12 @@ class UnstructuredLoader(BaseLoader):
 
         documents = []
         for element in elements:
+            metadata = element.metadata.to_dict()
+            metadata["reference"] = directory #TODO test it
             documents.append(
                 Document(
                     page_content=element.text,
-                    metadata=element.metadata.to_dict(),
+                    metadata=metadata,
                 )
             )
         return documents

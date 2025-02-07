@@ -1,5 +1,9 @@
 from typing import Literal
 
+from deeprag.loader.file_loader.base import BaseLoader
+from deeprag.loader.web_crawler.base import BaseCrawler
+from deeprag.vector_db.base import BaseVectorDB
+
 FeatureType = Literal["llm", "file_loader", "web_crawler", "vector_db"]
 
 class Configuration:
@@ -54,3 +58,28 @@ class Configuration:
             raise ValueError(f"Unsupported feature: {feature}")
 
         return self.settings[feature]
+
+class ModuleFactory:
+    def __init__(self, config: Configuration):
+        self.config = config
+    
+    def _create_module_instance(self, feature: FeatureType, module_name: str):
+        # e.g.
+        # feature = "file_loader"
+        # module_name = "deeprag.loader.file_loader"
+        class_name = self.config.settings[feature]["provider"]
+        module = __import__(module_name, fromlist=[class_name])
+        class_ = getattr(module, class_name)
+        return class_(**self.config.settings[feature]["config"])
+    
+    def create_llm(self):
+        return self._create_module_instance("llm", "deeprag.llm")
+    
+    def create_file_loader(self) -> BaseLoader:
+        return self._create_module_instance("file_loader", "deeprag.loader.file_loader")
+    
+    def create_web_crawler(self) -> BaseCrawler:
+        return self._create_module_instance("web_crawler", "deeprag.loader.web_crawler")
+    
+    def create_vector_db(self) -> BaseVectorDB:
+        return self._create_module_instance("vector_db", "deeprag.vector_db")

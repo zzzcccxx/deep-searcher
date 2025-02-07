@@ -1,5 +1,5 @@
 from deeprag.agent import generate_sub_queries, generate_gap_queries, generate_final_answer
-from deeprag.tools import search_chunks_from_vectordb
+# from deeprag.tools import search_chunks_from_vectordb
 
 
 def query(original_query: str, max_iter: int=8) -> str:
@@ -20,7 +20,7 @@ def query(original_query: str, max_iter: int=8) -> str:
         chunks_from_vectordb = []
         chunks_from_internet = []#TODO
         for query in sub_gap_queries:
-            chunks_from_vectordb.extend(search_chunks_from_vectordb(query))
+            chunks_from_vectordb.extend([])#search_chunks_from_vectordb(query))
             # chunks_from_internet.extend(search_chunks_from_internet(query))# TODO
         all_chunks.extend(chunks_from_vectordb + chunks_from_internet)
 

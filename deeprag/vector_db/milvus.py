@@ -1,6 +1,8 @@
 import numpy as np
 from typing import List
-from .db import DB
+
+from deeprag.loader.splitter import Chunk
+from deeprag.vector_db.base import BaseVectorDB
 from deeprag.tools import log
 from pymilvus import MilvusClient, DataType
 
@@ -19,7 +21,7 @@ class MilvusData:
         return f"MilvusData(score={self.score}, embedding={self.embedding}, text={self.text}, reference={self.reference}), metadata={self.metadata}"
 
 
-class Milvus(DB):
+class Milvus(BaseVectorDB):
     """Milvus class is a subclass of DB class."""
 
     client: MilvusClient = None
@@ -31,16 +33,19 @@ class Milvus(DB):
         db: str = "default",
     ):
         self.client = MilvusClient(uri=uri, token=token, db_name=db, timeout=30)
+        from pymilvus import model
+        # This will download "all-MiniLM-L6-v2", a light weight model.
+        self.embedding_model = model.DefaultEmbeddingFunction()
+        self.dim = self.embedding_model.dim
 
-    def init_db(
+    def init_collection(
         self,
-        dim: int,
         collection: str = "deep_rag",
-        force_new_collection: bool = False,
-        text_max_length: int = 1024,
-        reference_max_length: int = 256,
-        metric_type: str = "L2",
         description: str = "",
+        force_new_collection: bool = False,
+        text_max_length: int = 65_535,
+        reference_max_length: int = 2048,
+        metric_type: str = "L2",
         *args,
         **kwargs,
     ):
@@ -54,7 +59,7 @@ class Milvus(DB):
                 enable_dynamic_field=False, auto_id=True, description=description
             )
             schema.add_field("id", DataType.INT64, is_primary=True)
-            schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=dim)
+            schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=self.dim)
             schema.add_field("text", DataType.VARCHAR, max_length=text_max_length)
             schema.add_field(
                 "reference", DataType.VARCHAR, max_length=reference_max_length
@@ -71,16 +76,21 @@ class Milvus(DB):
         except Exception as e:
             log.critical(f"fail to init db for milvus, error info: {e}")
 
-    def insert_data(self, collection: str, rows: List[MilvusData], *args, **kwargs):
+    def insert_data(self, collection: str, chunks: List[Chunk], *args, **kwargs):
+        texts = [chunk.text for chunk in chunks]
+        references = [chunk.reference for chunk in chunks]
+        metadatas = [chunk.metadata for chunk in chunks]
+        embeddings = self.embedding_model.encode_documents(texts)
+
         try:
             datas = [
                 {
-                    "embedding": row.embedding,
-                    "text": row.text,
-                    "reference": row.reference,
-                    "metadata": row.metadata,
+                    "embedding": embedding,
+                    "text": text,
+                    "reference": reference,
+                    "metadata": metadata,
                 }
-                for row in rows
+                for embedding, text, reference, metadata in zip(embeddings, texts, references, metadatas)
             ]
             self.client.insert(collection_name=collection, data=datas)
         except Exception as e:

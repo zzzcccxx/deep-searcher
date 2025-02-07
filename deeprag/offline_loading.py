@@ -1,23 +1,28 @@
 import os
 from typing import List
 
-from deeprag.configuration import Configuration
-from deeprag.loader.file_loader import PDFLoader
+from deeprag.configuration import Configuration, ModuleFactory
 from deeprag.loader.splitter import split_docs_to_chunks
 
 
-def load_from_local_files(filepath_or_directorys: str | List[str], collection_name: str = None, collection_description: str = None, config: Configuration = None):
-    pdf_loader = PDFLoader()#TODO init from file_loader config
-    if isinstance(filepath_or_directorys, str):
-        filepath_or_directorys = [filepath_or_directorys]
+def load_from_local_files(paths_or_directory: str | List[str], collection_name: str = None, collection_description: str = None, config: Configuration = None):
+    module_factory = ModuleFactory(config)
+    vector_db = module_factory.create_vector_db()
+    vector_db.init_collection(collection=collection_name, description=collection_description, force_new_collection=True)
+    loader = module_factory.create_file_loader()
+    if isinstance(paths_or_directory, str):
+        paths_or_directory = [paths_or_directory]
     all_docs = []
-    for filepath_or_directory in filepath_or_directorys:
-        if os.path.isdir(filepath_or_directory):
-            docs = pdf_loader.load_directory(filepath_or_directory)
+    for path in paths_or_directory:
+        if os.path.isdir(path):
+            docs = loader.load_directory(path)
         else:
-            docs = pdf_loader.load_file(filepath_or_directory)
+            docs = loader.load_file(path)
         all_docs.extend(docs)
     chunks = split_docs_to_chunks(all_docs)
+    vector_db.insert_data(collection=collection_name, chunks=chunks)
+
+
     
 
 def load_from_website(urls: str | List[str], collection_name: str = None, collection_description: str = None):

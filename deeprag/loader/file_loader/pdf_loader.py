@@ -1,6 +1,6 @@
 from typing import List
-from langchain_core.documents import Document
 from deeprag.loader.file_loader.base import BaseLoader
+from langchain_core.documents import Document
 
 
 
@@ -12,7 +12,7 @@ class PDFLoader(BaseLoader):
         import pdfplumber
         with pdfplumber.open(file_path) as file:
             page_content = "\n\n".join([page.extract_text() for page in file.pages])
-            return [Document(page_content=page_content, metadata={"source": file_path})]
+            return [Document(page_content=page_content, metadata={"reference": file_path})]
 
     @property
     def supported_file_types(self) -> List[str]:

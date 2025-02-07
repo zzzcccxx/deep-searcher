@@ -4,10 +4,12 @@
 from langchain_core.documents import Document
 
 
-class Chunk(Document):
-    def __init__(self, text: str, metadata: dict = None, wider_text: str = None):
-        super().__init__(text, metadata)
-        self.wider_text = wider_text
+
+class Chunk:
+    def __init__(self, text: str, reference: str, metadata: dict = None):
+        self.text = text
+        self.reference = reference
+        self.metadata = metadata or {}
 
 
 from typing import List
@@ -15,7 +17,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 
-def _write_wider_window(
+def _sentence_window_split(
     split_docs: List[Document], original_document: Document, offset: int = 200
 ) -> List[Chunk]:
     chunks = []
@@ -27,7 +29,9 @@ def _write_wider_window(
         wider_text = original_text[
             max(0, start_index - offset) : min(len(original_text), end_index + offset)
         ]
-        chunk = Chunk(page_content=doc_text, metadata=doc.metadata, wider_text=wider_text)
+        reference = doc.metadata.pop("reference", "")
+        doc.metadata["wider_text"] = wider_text
+        chunk = Chunk(text=doc_text, reference=reference, metadata=doc.metadata)
         chunks.append(chunk)
     return chunks
 
@@ -35,5 +39,9 @@ def _write_wider_window(
 
 def split_docs_to_chunks(documents: List[Document], chunk_size: int = 1500, chunk_overlap=100) -> List[Chunk]:
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-    docs = text_splitter.split_documents(documents)
-    return _write_wider_window(docs, documents[0], offset=300)
+    all_chunks = []
+    for doc in documents:
+        split_docs = text_splitter.split_documents([doc])
+        split_chunks = _sentence_window_split(split_docs, doc, offset=300)
+        all_chunks.extend(split_chunks)
+    return all_chunks

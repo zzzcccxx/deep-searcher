@@ -1,4 +1,5 @@
 argparse
 firecrawl-py
-docling
-pymilvus==2.5.4
+langchain_core
+pdfplumber
+pymilvus[model]
