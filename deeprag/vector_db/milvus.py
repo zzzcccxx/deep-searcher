@@ -7,15 +7,16 @@ from pymilvus import MilvusClient, DataType
 
 class MilvusData:
     def __init__(
-        self, embedding: np.array, text: str, reference: str, score: float = 0.0
+        self, embedding: np.array, text: str, reference: str, metadata: dict, score: float = 0.0
     ):
         self.embedding = embedding
         self.text = text
         self.reference = reference
+        self.metadata = metadata
         self.score: float = score
 
     def __repr__(self):
-        return f"MilvusData(score={self.score}, embedding={self.embedding}, text={self.text}, reference={self.reference})"
+        return f"MilvusData(score={self.score}, embedding={self.embedding}, text={self.text}, reference={self.reference}), metadata={self.metadata}"
 
 
 class Milvus(DB):
@@ -51,7 +52,7 @@ class Milvus(DB):
             if has_collection:
                 return
             schema = self.client.create_schema(
-                enable_dynamic_field=True, auto_id=True, description=description
+                enable_dynamic_field=False, auto_id=True, description=description
             )
             schema.add_field("id", DataType.INT64, is_primary=True)
             schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=dim)
@@ -59,6 +60,7 @@ class Milvus(DB):
             schema.add_field(
                 "reference", DataType.VARCHAR, max_length=reference_max_length
             )
+            schema.add_field("metadata", DataType.JSON)
             index_params = self.client.prepare_index_params()
             index_params.add_index(field_name="embedding", metric_type=metric_type)
             self.client.create_collection(
@@ -80,6 +82,7 @@ class Milvus(DB):
                     "embedding": row.embedding,
                     "text": row.text,
                     "reference": row.reference,
+                    "metadata": row.metadata,
                 }
                 for row in rows
             ]
@@ -105,6 +108,7 @@ class Milvus(DB):
                     text=b["entity"]["text"],
                     reference=b["entity"]["reference"],
                     score=b["distance"],
+                    metadata=b["entity"]["metadata"],
                 )
                 for a in search_results
                 for b in a
