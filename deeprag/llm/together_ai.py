@@ -8,7 +8,7 @@ class TogetherAI(BaseLLM):
         self.model = model
         self.client = Together()
 
-    def chat(self, messages: List[Dict]) -> str:
+    def chat(self, messages: List[Dict]) -> ChatResponse:
         response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,

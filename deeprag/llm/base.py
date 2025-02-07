@@ -1,4 +1,5 @@
 from abc import ABC
+from typing import Dict, List
 
 class ChatResponse(ABC):
     def __init__(self, content: str, total_tokens: int) -> None:
@@ -10,5 +11,8 @@ class ChatResponse(ABC):
 
 class BaseLLM(ABC):
     def __init__(self):
+        pass
+
+    def chat(self, messages: List[Dict]) -> ChatResponse:
         pass
     

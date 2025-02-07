@@ -9,7 +9,7 @@ class OpenAI(BaseLLM):
         self.client = OpenAI_()
 
 
-    def chat(self, messages: List[Dict]) -> str:
+    def chat(self, messages: List[Dict]) -> ChatResponse:
         completion = self.client.chat.completions.create(
             model=self.model,
             messages=messages,

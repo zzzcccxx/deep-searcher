@@ -1,5 +1,6 @@
 from typing import Literal
 
+from deeprag.llm.base import BaseLLM
 from deeprag.loader.file_loader.base import BaseLoader
 from deeprag.loader.web_crawler.base import BaseCrawler
 from deeprag.vector_db.base import BaseVectorDB
@@ -11,9 +12,9 @@ class Configuration:
         # Initialize default configurations
         self.provide_settings = {
             "llm": {
-                "provider": "DeepSeek",
+                "provider": "TogetherAI",
                 "config": {
-                    "model": "deepseek-chat"
+                    "model": "deepseek-ai/DeepSeek-V3"
                 }
             },
             "file_loader": {
@@ -75,7 +76,7 @@ class ModuleFactory:
         class_ = getattr(module, class_name)
         return class_(**self.config.provide_settings[feature]["config"])
     
-    def create_llm(self):
+    def create_llm(self) -> BaseLLM:
         return self._create_module_instance("llm", "deeprag.llm")
     
     def create_file_loader(self) -> BaseLoader:
