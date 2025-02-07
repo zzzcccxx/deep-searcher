@@ -13,9 +13,9 @@ class Configuration:
         # Initialize default configurations
         self.provide_settings = {
             "llm": {
-                "provider": "TogetherAI",
+                "provider": "OpenAI",#"TogetherAI",
                 "config": {
-                    "model": "deepseek-ai/DeepSeek-V3"
+                    "model": "gpt-4o"#"deepseek-ai/DeepSeek-V3"
                 }
             },
             "embedding": {
@@ -40,7 +40,7 @@ class Configuration:
             }
         }
         self.query_settings = {
-            "max_iter": 8
+            "max_iter": 4
         }
 
     def set_provider_config(self, feature: FeatureType, provider: str, provider_configs: dict):
@@ -97,3 +97,14 @@ class ModuleFactory:
     
     def create_vector_db(self) -> BaseVectorDB:
         return self._create_module_instance("vector_db", "deeprag.vector_db")
+    
+
+config = Configuration()
+module_factory = ModuleFactory(config)
+
+llm = module_factory.create_llm()
+embedding_model = module_factory.create_embedding()
+file_loader = module_factory.create_file_loader()
+# web_crawler = module_factory.create_web_crawler()
+vector_db = module_factory.create_vector_db()
+    

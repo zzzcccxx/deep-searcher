@@ -2,7 +2,7 @@ import numpy as np
 from typing import List
 
 from deeprag.loader.splitter import Chunk
-from deeprag.vector_db.base import BaseVectorDB, RetrievalResult
+from deeprag.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalResult
 from deeprag.tools import log
 from pymilvus import MilvusClient, DataType
 
@@ -83,7 +83,7 @@ class Milvus(BaseVectorDB):
             log.critical(f"fail to insert data, error info: {e}")
 
     def search_data(
-        self, collection: str, vector: np.array, top_k: int = 5, *args, **kwargs
+        self, collection: str, vector: np.array | List[float], top_k: int = 5, *args, **kwargs
     ) -> List[RetrievalResult]:
         try:
             search_results = self.client.search(
@@ -107,6 +107,22 @@ class Milvus(BaseVectorDB):
             ]
         except Exception as e:
             log.critical(f"fail to search data, error info: {e}")
+
+    def list_collections(self, *args, **kwargs) -> List[CollectionInfo]:
+        collection_infos = []
+        try:
+            collections = self.client.list_collections()
+            for collection in collections:
+                description = self.client.describe_collection(collection)
+                collection_infos.append(
+                    CollectionInfo(
+                        collection_name=collection,
+                        description=description["description"],
+                    )
+                )
+        except Exception as e:
+            log.critical(f"fail to list collections, error info: {e}")
+        return collection_infos
 
     def clear_db(self, collection: str = "deep_rag", *args, **kwargs):
         try:

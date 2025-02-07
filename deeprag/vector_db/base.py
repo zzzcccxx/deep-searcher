@@ -23,7 +23,10 @@ class RetrievalResult:
     def __repr__(self):
         return f"RetrievalResult(score={self.score}, embedding={self.embedding}, text={self.text}, reference={self.reference}), metadata={self.metadata}"
 
-
+class CollectionInfo:
+    def __init__(self, collection_name: str, description: str):
+        self.collection_name = collection_name
+        self.description = description
 
 
 class BaseVectorDB(ABC):
@@ -36,7 +39,10 @@ class BaseVectorDB(ABC):
         pass
     
     @abstractmethod
-    def search_data(self, collection: str, data, *args, **kwargs):
+    def search_data(self, collection: str, vector: np.array | List[float], *args, **kwargs) -> List[RetrievalResult]:
+        pass
+
+    def list_collections(self, *args, **kwargs) -> List[CollectionInfo]:
         pass
 
     @abstractmethod
