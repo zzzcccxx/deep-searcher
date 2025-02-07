@@ -8,14 +8,15 @@ from deeprag.tools import log
 class TestMilvus(unittest.TestCase):
     def test_milvus(self):
         d = 8
+        collection = "hellp_deep_rag"
         milvus = Milvus()
         milvus.init_db(
             dim=d,
-            uri="https://in01-e7a0f666553484e.aws-us-west-2.vectordb-uat3.zillizcloud.com:19536",
-            token="4b3adfb14ce0800147d6f31b64d247a9bdf70589b2b2f3d50fc34e9c582d4578a4bb58838774f52ecf5923bdd2d96ce6a8638719",
+            collection=collection,
         )
         rng = np.random.default_rng(seed=19530)
         milvus.insert_data(
+            collection=collection,
             rows=[
                 MilvusData(
                     embedding=rng.random((1, d))[0],
@@ -39,7 +40,7 @@ class TestMilvus(unittest.TestCase):
                 ),
             ]
         )
-        top_2 = milvus.search_data(vector=rng.random((1, d))[0], top_k=2)
+        top_2 = milvus.search_data(collection=collection, vector=rng.random((1, d))[0], top_k=2)
         log.info(pprint.pformat(top_2))
 
     def test_clear_collection(self):
