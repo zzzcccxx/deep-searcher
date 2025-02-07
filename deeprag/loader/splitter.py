@@ -1,15 +1,17 @@
 ## Sentence Window splitting strategy, ref:
 #  https://github.com/milvus-io/bootcamp/blob/master/bootcamp/RAG/advanced_rag/sentence_window_with_langchain.ipynb
 
+from typing import List
 from langchain_core.documents import Document
 
 
 
 class Chunk:
-    def __init__(self, text: str, reference: str, metadata: dict = None):
+    def __init__(self, text: str, reference: str, metadata: dict = None, embedding: List[float] = None):
         self.text = text
         self.reference = reference
         self.metadata = metadata or {}
+        self.embedding = embedding or None
 
 
 from typing import List

@@ -1,5 +1,6 @@
 from typing import Literal
 
+from deeprag.embedding.base import BaseEmbedding
 from deeprag.llm.base import BaseLLM
 from deeprag.loader.file_loader.base import BaseLoader
 from deeprag.loader.web_crawler.base import BaseCrawler
@@ -15,6 +16,12 @@ class Configuration:
                 "provider": "TogetherAI",
                 "config": {
                     "model": "deepseek-ai/DeepSeek-V3"
+                }
+            },
+            "embedding": {
+                "provider": "MilvusEmbedding",
+                "config": {
+                    "model_name": "default"
                 }
             },
             "file_loader": {
@@ -78,6 +85,9 @@ class ModuleFactory:
     
     def create_llm(self) -> BaseLLM:
         return self._create_module_instance("llm", "deeprag.llm")
+    
+    def create_embedding(self) -> BaseEmbedding:
+        return self._create_module_instance("embedding", "deeprag.embedding")
     
     def create_file_loader(self) -> BaseLoader:
         return self._create_module_instance("file_loader", "deeprag.loader.file_loader")

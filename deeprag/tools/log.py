@@ -34,3 +34,6 @@ def error(message):
 def critical(message):
     """critical log"""
     logging.critical(message)
+
+def color_print(message, **kwargs):
+    ...

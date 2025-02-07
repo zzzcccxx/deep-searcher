@@ -1,3 +1,3 @@
-from .milvus import Milvus, MilvusData
+from .milvus import Milvus, RetrievalResult
 
-__all__ = ["Milvus", "MilvusData"]
+__all__ = ["Milvus", "RetrievalResult"]

@@ -8,7 +8,9 @@ from deeprag.loader.splitter import split_docs_to_chunks
 def load_from_local_files(paths_or_directory: str | List[str], collection_name: str = None, collection_description: str = None, config: Configuration = None):
     module_factory = ModuleFactory(config)
     vector_db = module_factory.create_vector_db()
-    vector_db.init_collection(collection=collection_name, description=collection_description, force_new_collection=True)
+    embedding_model = module_factory.create_embedding()
+    vector_db.init_collection(dim=embedding_model.dimension, collection=collection_name, description=collection_description, force_new_collection=True)
+    
     loader = module_factory.create_file_loader()
     if isinstance(paths_or_directory, str):
         paths_or_directory = [paths_or_directory]
@@ -20,13 +22,14 @@ def load_from_local_files(paths_or_directory: str | List[str], collection_name: 
             docs = loader.load_file(path)
         all_docs.extend(docs)
     chunks = split_docs_to_chunks(all_docs)
+    chunks = embedding_model.embed_chunks(chunks)
     vector_db.insert_data(collection=collection_name, chunks=chunks)
 
 
     
 
 def load_from_website(urls: str | List[str], collection_name: str = None, collection_description: str = None):
-    ... # move to web_crawler package
+    ... # TODO move to web_crawler package
     # import os
     # from firecrawl import FirecrawlApp
     # if isinstance(urls, str):

@@ -3,3 +3,5 @@ firecrawl-py
 langchain_core
 pdfplumber
 pymilvus[model]
+openai
+numpy

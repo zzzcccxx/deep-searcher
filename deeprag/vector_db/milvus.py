@@ -2,23 +2,9 @@ import numpy as np
 from typing import List
 
 from deeprag.loader.splitter import Chunk
-from deeprag.vector_db.base import BaseVectorDB
+from deeprag.vector_db.base import BaseVectorDB, RetrievalResult
 from deeprag.tools import log
 from pymilvus import MilvusClient, DataType
-
-
-class MilvusData:
-    def __init__(
-        self, embedding: np.array, text: str, reference: str, metadata: dict, score: float = 0.0
-    ):
-        self.embedding = embedding
-        self.text = text
-        self.reference = reference
-        self.metadata = metadata
-        self.score: float = score
-
-    def __repr__(self):
-        return f"MilvusData(score={self.score}, embedding={self.embedding}, text={self.text}, reference={self.reference}), metadata={self.metadata}"
 
 
 class Milvus(BaseVectorDB):
@@ -33,13 +19,11 @@ class Milvus(BaseVectorDB):
         db: str = "default",
     ):
         self.client = MilvusClient(uri=uri, token=token, db_name=db, timeout=30)
-        from pymilvus import model
-        # This will download "all-MiniLM-L6-v2", a light weight model.
-        self.embedding_model = model.DefaultEmbeddingFunction()
-        self.dim = self.embedding_model.dim
+
 
     def init_collection(
         self,
+        dim: int,
         collection: str = "deep_rag",
         description: str = "",
         force_new_collection: bool = False,
@@ -53,13 +37,13 @@ class Milvus(BaseVectorDB):
             has_collection = self.client.has_collection(collection, timeout=5)
             if force_new_collection and has_collection:
                 self.client.drop_collection(collection)
-            if has_collection:
+            elif has_collection:
                 return
             schema = self.client.create_schema(
                 enable_dynamic_field=False, auto_id=True, description=description
             )
             schema.add_field("id", DataType.INT64, is_primary=True)
-            schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=self.dim)
+            schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=dim)
             schema.add_field("text", DataType.VARCHAR, max_length=text_max_length)
             schema.add_field(
                 "reference", DataType.VARCHAR, max_length=reference_max_length
@@ -80,7 +64,7 @@ class Milvus(BaseVectorDB):
         texts = [chunk.text for chunk in chunks]
         references = [chunk.reference for chunk in chunks]
         metadatas = [chunk.metadata for chunk in chunks]
-        embeddings = self.embedding_model.encode_documents(texts)
+        embeddings = [chunk.embedding for chunk in chunks]
 
         try:
             datas = [
@@ -90,7 +74,9 @@ class Milvus(BaseVectorDB):
                     "reference": reference,
                     "metadata": metadata,
                 }
-                for embedding, text, reference, metadata in zip(embeddings, texts, references, metadatas)
+                for embedding, text, reference, metadata in zip(
+                    embeddings, texts, references, metadatas
+                )
             ]
             self.client.insert(collection_name=collection, data=datas)
         except Exception as e:
@@ -98,7 +84,7 @@ class Milvus(BaseVectorDB):
 
     def search_data(
         self, collection: str, vector: np.array, top_k: int = 5, *args, **kwargs
-    ) -> List[MilvusData]:
+    ) -> List[RetrievalResult]:
         try:
             search_results = self.client.search(
                 collection_name=collection,
@@ -109,7 +95,7 @@ class Milvus(BaseVectorDB):
             )
 
             return [
-                MilvusData(
+                RetrievalResult(
                     embedding=b["entity"]["embedding"],
                     text=b["entity"]["text"],
                     reference=b["entity"]["reference"],

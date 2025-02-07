@@ -1,4 +1,6 @@
+from deeprag import vector_db
 from deeprag.agent import generate_sub_queries, generate_gap_queries, generate_final_answer
+from deeprag.agent.search_vdb import search_chunks_from_vectordb
 from deeprag.configuration import Configuration, ModuleFactory
 # from deeprag.tools import search_chunks_from_vectordb
 
@@ -6,6 +8,8 @@ from deeprag.configuration import Configuration, ModuleFactory
 def query(original_query: str, config: Configuration = None) -> str:
     module_factory = ModuleFactory(config)
     llm = module_factory.create_llm()
+    embedding_model = module_factory.create_embedding()
+    vector_db = module_factory.create_vector_db()
     
     print(f"Original query: {original_query}")
     all_chunks = []
@@ -24,7 +28,7 @@ def query(original_query: str, config: Configuration = None) -> str:
         chunks_from_vectordb = []
         chunks_from_internet = []#TODO
         for query in sub_gap_queries:
-            chunks_from_vectordb.extend([])#search_chunks_from_vectordb(query))
+            chunks_from_vectordb.extend(search_chunks_from_vectordb(query, vector_db, llm, embedding_model))
             # chunks_from_internet.extend(search_chunks_from_internet(query))# TODO
         all_chunks.extend(chunks_from_vectordb + chunks_from_internet)
 

@@ -1,7 +1,7 @@
 import unittest
 import pprint
 import numpy as np
-from deeprag.vector_db import Milvus, MilvusData
+from deeprag.vector_db import Milvus, RetrievalResult
 from deeprag.tools import log
 
 
@@ -18,29 +18,31 @@ class TestMilvus(unittest.TestCase):
         milvus.insert_data(
             collection=collection,
             rows=[
-                MilvusData(
+                RetrievalResult(
                     embedding=rng.random((1, d))[0],
                     text="hello world",
                     reference="local file: hi.txt",
                 ),
-                MilvusData(
+                RetrievalResult(
                     embedding=rng.random((1, d))[0],
                     text="hello milvus",
                     reference="local file: hi.txt",
                 ),
-                MilvusData(
+                RetrievalResult(
                     embedding=rng.random((1, d))[0],
                     text="hello deep learning",
                     reference="local file: hi.txt",
                 ),
-                MilvusData(
+                RetrievalResult(
                     embedding=rng.random((1, d))[0],
                     text="hello llm",
                     reference="local file: hi.txt",
                 ),
-            ]
+            ],
         )
-        top_2 = milvus.search_data(collection=collection, vector=rng.random((1, d))[0], top_k=2)
+        top_2 = milvus.search_data(
+            collection=collection, vector=rng.random((1, d))[0], top_k=2
+        )
         log.info(pprint.pformat(top_2))
 
     def test_clear_collection(self):
