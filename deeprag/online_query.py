@@ -1,8 +1,9 @@
 from deeprag.agent import generate_sub_queries, generate_gap_queries, generate_final_answer
+from deeprag.configuration import Configuration
 # from deeprag.tools import search_chunks_from_vectordb
 
 
-def query(original_query: str, max_iter: int=8) -> str:
+def query(original_query: str, config: Configuration = None) -> str:# max_iter: int=8) -> str:
     print(f"Original query: {original_query}")
     all_chunks = []
     all_sub_queries = []
@@ -15,7 +16,7 @@ def query(original_query: str, max_iter: int=8) -> str:
     all_sub_queries.extend(sub_queries)
     sub_gap_queries = sub_queries
 
-    for iter in range(max_iter):
+    for iter in range(config.query_settings["max_iter"]):
         print(f"Iteration: {iter + 1}")
         chunks_from_vectordb = []
         chunks_from_internet = []#TODO

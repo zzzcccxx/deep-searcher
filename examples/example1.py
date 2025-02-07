@@ -8,4 +8,4 @@ load_from_local_files("./examples/data/WhatisMilvus.pdf", collection_name="what_
 
 # load_from_website(["https://milvus.io/docs/release_notes.md"], collection_name="milvus_docs")
 
-query("what is the new feature of Milvus 2.5.4?")
+query("what is the new feature of Milvus 2.5.4?", config=config)

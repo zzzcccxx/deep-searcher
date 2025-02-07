@@ -9,7 +9,7 @@ FeatureType = Literal["llm", "file_loader", "web_crawler", "vector_db"]
 class Configuration:
     def __init__(self):
         # Initialize default configurations
-        self.settings = {
+        self.provide_settings = {
             "llm": {
                 "provider": "DeepSeek",
                 "config": {
@@ -31,6 +31,9 @@ class Configuration:
                 }
             }
         }
+        self.query_settings = {
+            "max_iter": 8
+        }
 
     def set_provider_config(self, feature: FeatureType, provider: str, provider_configs: dict):
         """
@@ -40,11 +43,11 @@ class Configuration:
         :param provider: The provider name (e.g., 'openai', 'deepseek').
         :param provider_configs: A dictionary with configurations specific to the provider.
         """
-        if feature not in self.settings:
+        if feature not in self.provide_settings:
             raise ValueError(f"Unsupported feature: {feature}")
 
-        self.settings[feature]["provider"] = provider
-        self.settings[feature]["config"] = provider_configs
+        self.provide_settings[feature]["provider"] = provider
+        self.provide_settings[feature]["config"] = provider_configs
 
 
     def get_provider_config(self, feature: FeatureType):
@@ -54,10 +57,10 @@ class Configuration:
         :param feature: The feature to retrieve (e.g., 'llm', 'file_loader', 'web_crawler').
         :return: A dictionary with provider and its configurations.
         """
-        if feature not in self.settings:
+        if feature not in self.provide_settings:
             raise ValueError(f"Unsupported feature: {feature}")
 
-        return self.settings[feature]
+        return self.provide_settings[feature]
 
 class ModuleFactory:
     def __init__(self, config: Configuration):
@@ -67,10 +70,10 @@ class ModuleFactory:
         # e.g.
         # feature = "file_loader"
         # module_name = "deeprag.loader.file_loader"
-        class_name = self.config.settings[feature]["provider"]
+        class_name = self.config.provide_settings[feature]["provider"]
         module = __import__(module_name, fromlist=[class_name])
         class_ = getattr(module, class_name)
-        return class_(**self.config.settings[feature]["config"])
+        return class_(**self.config.provide_settings[feature]["config"])
     
     def create_llm(self):
         return self._create_module_instance("llm", "deeprag.llm")
