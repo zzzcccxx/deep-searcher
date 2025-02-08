@@ -16,6 +16,3 @@ class OpenAI(BaseLLM):
         )
         return ChatResponse(content=completion.choices[0].message.content, total_tokens=completion.usage.total_tokens)
 
-if __name__ == "__main__":
-    llm = OpenAI()
-    print(llm.chat(messages=[{"role": "user", "content": "Hello, how are you?"}]))

@@ -39,10 +39,3 @@ class MilvusEmbedding(BaseEmbedding):
     @property
     def dimension(self) -> int:
         return self.model.dim # or MILVUS_MODEL_DIM_MAP[self.model_name]
-    
-if __name__ == "__main__":
-    # embedding = MilvusEmbedding("BAAI/bge-base-en-v1.5")
-    embedding = MilvusEmbedding()
-    print(embedding.dimension())
-    print(embedding.embed_query("Hello world"))
-    print(embedding.embed_documents(["Hello world", "Hello world"]))

@@ -3,7 +3,7 @@ import shutil
 from typing import List
 from langchain_core.documents import Document
 from deeprag.loader.file_loader.base import BaseLoader
-
+from deeprag.tools import log
 
 class UnstructuredLoader(BaseLoader):
     def __init__(self):
@@ -54,7 +54,7 @@ class UnstructuredLoader(BaseLoader):
                 try:
                     elements.extend(elements_from_json(filename=file_path))
                 except IOError:
-                    print(f"Error: Could not read file {filename}.")
+                    log.color_print(f"Error: Could not read file {filename}.")
 
 
 

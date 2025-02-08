@@ -15,7 +15,3 @@ class TogetherAI(BaseLLM):
         )
         return ChatResponse(content=response.choices[0].message.content, total_tokens=response.usage.total_tokens)
 
-
-if __name__ == "__main__":
-    llm = TogetherAI()
-    print(llm.chat(messages=[{"role": "user", "content": "Hello, how are you?"}]))
