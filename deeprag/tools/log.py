@@ -29,9 +29,14 @@ class ColoredFormatter(logging.Formatter):
         # return super().format(record)
 
 # config log
+formatter = ColoredFormatter("%(asctime)s - %(levelname)s - %(message)s")
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
+root_logger = logging.getLogger()
+for handler in root_logger.handlers:
+    if isinstance(handler, logging.StreamHandler):
+        handler.setFormatter(formatter)
 
 dev_mode = False
 
