@@ -10,10 +10,15 @@ class PDFLoader(BaseLoader):
 
     def load_file(self, file_path: str) -> List[Document]:
         import pdfplumber
-        with pdfplumber.open(file_path) as file:
-            page_content = "\n\n".join([page.extract_text() for page in file.pages])
-            return [Document(page_content=page_content, metadata={"reference": file_path})]
+        if file_path.endswith(".pdf"):
+            with pdfplumber.open(file_path) as file:
+                page_content = "\n\n".join([page.extract_text() for page in file.pages])
+                return [Document(page_content=page_content, metadata={"reference": file_path})]
+        elif file_path.endswith(".txt") or file_path.endswith(".md"):
+            with open(file_path, "r") as file:
+                page_content = file.read()
+                return [Document(page_content=page_content, metadata={"reference": file_path})]
 
     @property
     def supported_file_types(self) -> List[str]:
-        return ["pdf"]
+        return ["pdf", "md", "txt"]

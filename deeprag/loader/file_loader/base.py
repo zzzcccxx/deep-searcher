@@ -20,7 +20,8 @@ class BaseLoader(ABC):
             for file in os.listdir(directory):
                 for suffix in self.supported_file_types:
                     if file.endswith(suffix):
-                        documents.extend(self.load(os.path.join(directory, file)))
+                        documents.extend(self.load_file(os.path.join(directory, file)))
+            return documents
 
     @property
     def supported_file_types(self) -> List[str]:
