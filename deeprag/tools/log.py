@@ -40,7 +40,7 @@ for handler in root_logger.handlers:
 
 dev_mode = False
 
-def set_dev_mode(mode):
+def set_dev_mode(mode: bool):
     """set dev mode"""
     global dev_mode
     dev_mode = mode
