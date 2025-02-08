@@ -25,16 +25,21 @@ def search_chunks_from_vectordb(query: str):
         response_content = response_content[7:-3]
     # try:
     collection_2_query = ast.literal_eval(response_content)
+    print(f"\ncollection_2_query: {collection_2_query}\n")
     # except:
         # print(f"Failed to parse response: {response_content}\nReturning empty list.")
     all_retrieved_results = []
     for collection, query in collection_2_query.items():
+        print(f"\n  Search query in [{collection}]: {query}")
         retrieved_results = vector_db.search_data(collection=collection, vector=embedding_model.embed_query(query))
 
         for retrieved_result in retrieved_results:
             chat_response = llm.chat(messages=[{"role": "user", "content": RERANK_PROMPT.format(query=query, retrieved_chunk=retrieved_result.text)}])
             if chat_response.content.startswith("YES"):
                 all_retrieved_results.append(retrieved_result)
+                print("    Chunk Accepted")
+            else:
+                print("    Chunk Rejected")
     return all_retrieved_results
     
     # vector_db.search_data(collection="deep_rag", vector=query_embedding)

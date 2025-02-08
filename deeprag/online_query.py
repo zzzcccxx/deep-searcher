@@ -1,10 +1,7 @@
-from deeprag import vector_db
 from deeprag.agent import generate_sub_queries, generate_gap_queries, generate_final_answer
 from deeprag.agent.search_vdb import search_chunks_from_vectordb
-from deeprag.configuration import Configuration, ModuleFactory
 from deeprag.vector_db.base import deduplicate_results
-# from deeprag.tools import search_chunks_from_vectordb
-
+from deeprag.configuration import vector_db, embedding_model, llm
 
 def query(original_query: str, max_iter: int = 3) -> str:
     
@@ -24,7 +21,9 @@ def query(original_query: str, max_iter: int = 3) -> str:
         print(f"Iteration: {iter + 1}")
         search_res_from_vectordb = []
         search_res_from_internet = []#TODO
+        print(f"New sub-queries: {sub_gap_queries}")
         for query in sub_gap_queries:
+            print(f"Searching for query: {query}")
             search_res_from_vectordb.extend(search_chunks_from_vectordb(query))
             # search_res_from_internet.extend(search_chunks_from_internet(query))# TODO
         search_res_from_vectordb = deduplicate_results(search_res_from_vectordb)
@@ -48,3 +47,36 @@ def query(original_query: str, max_iter: int = 3) -> str:
     print("==== FINAL ANSWER====")
     print(final_answer)
     return final_answer
+
+
+
+def naive_rag_query(query: str, collection: str=None):
+    if not collection:
+        retrieval_res = []
+        collections = [col_info.collection_name for col_info in vector_db.list_collections()]
+        for collection in collections:
+            retrieval_res_col = vector_db.search_data(collection=collection, vector=embedding_model.embed_query(query), top_k=10)
+            retrieval_res.extend(retrieval_res_col)
+        retrieval_res = deduplicate_results(retrieval_res)
+    else:
+        retrieval_res = vector_db.search_data(collection=collection, vector=embedding_model.embed_query(query), top_k=10)
+
+    
+    chunk_texts = []
+    for chunk in retrieval_res:
+        if "wider_text" in chunk.metadata:
+            chunk_texts.append(chunk.metadata["wider_text"])
+        else:
+            chunk_texts.append(chunk.text)
+    mini_chunk_str = ""
+    for i, chunk in enumerate(chunk_texts):
+        mini_chunk_str += f"""<chunk_{i}>\n{chunk}\n</chunk_{i}>\n"""
+    
+    summary_prompt = f"""You are a AI content analysis expert, good at summarizing content. Please summarize a specific and detailed answer or report based on the previous queries and the retrieved document chunks.
+
+    Original Query: {query}
+    Related Chunks: 
+    {mini_chunk_str}
+    """    
+    char_response = llm.chat([{"role": "user", "content": summary_prompt}])
+    return char_response.content
