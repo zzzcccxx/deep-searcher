@@ -30,7 +30,6 @@ def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
         response_content = response_content[7:-3]
     # try:
     collection_2_query = ast.literal_eval(response_content)
-    log.color_print(f"\ncollection_2_query: {collection_2_query}\n")
     # except:
         # log.color_print(f"Failed to parse response: {response_content}\nReturning empty list.")
     
@@ -38,20 +37,23 @@ def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
     for collection_info in collection_infos:
         if not collection_info.description:
             collection_2_query[collection_info.collection_name] = query
-    
+    log.color_print(f"<think> Perform search [{query}] on the vector DB collections: {list(collection_2_query.keys())} </think>\n")
     all_retrieved_results = []
     for collection, col_query in collection_2_query.items():
         col_query = query #TODO col_query seems too verbose, use original query instead, need more tests and prompt refinement
-        log.color_print(f"\n  Search query in [{collection}]: {col_query}")
+        log.color_print(f"<search> Search [{col_query}] in [{collection}]...  </search>\n")
         retrieved_results = vector_db.search_data(collection=collection, vector=embedding_model.embed_query(col_query))
 
+        accepted_chunk_num = 0
+        references = []
         for retrieved_result in retrieved_results:
             chat_response = llm.chat(messages=[{"role": "user", "content": RERANK_PROMPT.format(query=[col_query] + sub_queries, retrieved_chunk=retrieved_result.text)}])
             if chat_response.content.startswith("YES"):
                 all_retrieved_results.append(retrieved_result)
-                log.color_print("    Chunk Accepted")
-            else:
-                log.color_print("    Chunk Rejected")
+                accepted_chunk_num += 1
+                references.append(retrieved_result.reference)
+        if accepted_chunk_num > 0:
+            log.color_print(f"<search> Accept {accepted_chunk_num} document chunk(s) from references: {references} </search>\n")
     return all_retrieved_results
     
     # vector_db.search_data(collection="deep_rag", vector=query_embedding)

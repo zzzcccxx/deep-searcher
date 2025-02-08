@@ -29,7 +29,6 @@ def generate_sub_queries(original_query: str) -> List[str]:
     llm = configuration.llm
     chat_response = llm.chat(messages=[{"role": "user", "content": PROMPT.format(original_query=original_query)}])
     response_content = chat_response.content
-    log.color_print(f"response_content: {response_content}")
     try:
         sub_queries = ast.literal_eval(response_content)
     except:

@@ -14,7 +14,7 @@ def generate_final_answer(original_query: str, all_sub_queries: List[str], all_c
             chunk_texts.append(chunk.metadata["wider_text"])
         else:
             chunk_texts.append(chunk.text)
-    log.color_print(f"Summarize answer from all {len(all_chunks)} retrieved chunks...")
+    log.color_print(f"<think> Summarize answer from all {len(all_chunks)} retrieved chunks... </think>\n")
     summary_prompt = get_final_answer_prompt(question=original_query, mini_questions=all_sub_queries, mini_chuncks=chunk_texts)
     chat_responese = llm.chat([{"role": "user", "content": summary_prompt}])
     return chat_responese.content
