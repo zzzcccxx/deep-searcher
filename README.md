@@ -15,7 +15,7 @@ Deep RAG Agent combines Large Language Models (LLMs) and Vector Databases to per
 ---
 
 ## 🎉 Demo Effect
-
+![demo](demo.gif)
 
 
 ## 📖 Quick Start
