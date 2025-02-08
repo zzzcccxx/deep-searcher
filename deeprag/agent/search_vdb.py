@@ -2,7 +2,8 @@ import ast
 from typing import List
 
 from deeprag.agent.prompt import get_vector_db_search_prompt
-from deeprag.configuration import llm, embedding_model, vector_db
+# from deeprag.configuration import llm, embedding_model, vector_db
+from deeprag import configuration
 
 
 
@@ -13,6 +14,9 @@ Retrieved Chunk: {retrieved_chunk}
 Is the chunk helpful in answering the any of the questions?
 """
 def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
+    vector_db = configuration.vector_db
+    llm = configuration.llm
+    embedding_model = configuration.embedding
     # query_embedding = embedding_model.embed_query(query)
     collection_infos = vector_db.list_collections()
     vector_db_search_prompt = get_vector_db_search_prompt(

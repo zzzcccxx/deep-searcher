@@ -1,7 +1,10 @@
 from deeprag.agent import generate_sub_queries, generate_gap_queries, generate_final_answer
 from deeprag.agent.search_vdb import search_chunks_from_vectordb
 from deeprag.vector_db.base import deduplicate_results
-from deeprag.configuration import vector_db, embedding_model, llm
+# from deeprag.configuration import vector_db, embedding_model, llm
+from deeprag import configuration
+
+
 
 def query(original_query: str, max_iter: int = 3) -> str:
     
@@ -51,11 +54,15 @@ def query(original_query: str, max_iter: int = 3) -> str:
 
 
 def naive_rag_query(query: str, collection: str=None, top_k=10):
+    vector_db = configuration.vector_db
+    embedding_model = configuration.embedding_model
+    llm = configuration.llm
+
     if not collection:
         retrieval_res = []
         collections = [col_info.collection_name for col_info in vector_db.list_collections()]
         for collection in collections:
-            retrieval_res_col = vector_db.search_data(collection=collection, vector=embedding_model.embed_query(query), top_k=top_k)
+            retrieval_res_col = vector_db.search_data(collection=collection, vector=embedding_model.embed_query(query), top_k=top_k//len(collections))
             retrieval_res.extend(retrieval_res_col)
         retrieval_res = deduplicate_results(retrieval_res)
     else:
@@ -77,6 +84,6 @@ def naive_rag_query(query: str, collection: str=None, top_k=10):
     Original Query: {query}
     Related Chunks: 
     {mini_chunk_str}
-    """    
+    """
     char_response = llm.chat([{"role": "user", "content": summary_prompt}])
     return char_response.content

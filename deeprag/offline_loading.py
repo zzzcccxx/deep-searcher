@@ -4,10 +4,14 @@ from typing import List
 from tqdm import tqdm
 
 from deeprag.loader.splitter import split_docs_to_chunks
-from deeprag.configuration import embedding_model, vector_db, file_loader
+# from deeprag.configuration import embedding_model, vector_db, file_loader
+from deeprag import configuration
 
 
 def load_from_local_files(paths_or_directory: str | List[str], collection_name: str = None, collection_description: str = None):
+    vector_db = configuration.vector_db
+    embedding_model = configuration.embedding_model
+    file_loader = configuration.file_loader
     vector_db.init_collection(dim=embedding_model.dimension, collection=collection_name, description=collection_description, force_new_collection=True)
     if isinstance(paths_or_directory, str):
         paths_or_directory = [paths_or_directory]

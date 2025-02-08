@@ -2,7 +2,8 @@ import ast
 from typing import List
 
 from deeprag.tools import log
-from deeprag.configuration import llm
+# from deeprag.configuration import llm
+from deeprag import configuration
 
 PROMPT = """To answer this question more comprehensively, please break down the original question into several sub-questions. Return as list of str.
 If this is a very simple question and no decomposition is necessary, then keep the only one original question in the list.
@@ -25,6 +26,7 @@ Example output:
 Provide your response in list of str format:
 """
 def generate_sub_queries(original_query: str) -> List[str]:
+    llm = configuration.llm
     chat_response = llm.chat(messages=[{"role": "user", "content": PROMPT.format(original_query=original_query)}])
     response_content = chat_response.content
     log.color_print(f"response_content: {response_content}")
