@@ -24,7 +24,7 @@ def query(original_query: str, max_iter: int = 3) -> str:
         print(f"New sub-queries: {sub_gap_queries}")
         for query in sub_gap_queries:
             print(f"Searching for query: {query}")
-            search_res_from_vectordb.extend(search_chunks_from_vectordb(query))
+            search_res_from_vectordb.extend(search_chunks_from_vectordb(query, sub_gap_queries))
             # search_res_from_internet.extend(search_chunks_from_internet(query))# TODO
         search_res_from_vectordb = deduplicate_results(search_res_from_vectordb)
         # search_res_from_internet = deduplicate_results(search_res_from_internet)
@@ -50,12 +50,12 @@ def query(original_query: str, max_iter: int = 3) -> str:
 
 
 
-def naive_rag_query(query: str, collection: str=None):
+def naive_rag_query(query: str, collection: str=None, top_k=10):
     if not collection:
         retrieval_res = []
         collections = [col_info.collection_name for col_info in vector_db.list_collections()]
         for collection in collections:
-            retrieval_res_col = vector_db.search_data(collection=collection, vector=embedding_model.embed_query(query), top_k=10)
+            retrieval_res_col = vector_db.search_data(collection=collection, vector=embedding_model.embed_query(query), top_k=top_k)
             retrieval_res.extend(retrieval_res_col)
         retrieval_res = deduplicate_results(retrieval_res)
     else:
