@@ -29,14 +29,18 @@ class ColoredFormatter(logging.Formatter):
         # return super().format(record)
 
 # config log
-formatter = ColoredFormatter("%(asctime)s - %(levelname)s - %(message)s")
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
-root_logger = logging.getLogger()
-for handler in root_logger.handlers:
-    if isinstance(handler, logging.StreamHandler):
-        handler.setFormatter(formatter)
+dev_logger = logging.getLogger("dev")
+dev_formatter = ColoredFormatter("%(asctime)s - %(levelname)s - %(message)s")
+dev_handler = logging.StreamHandler()
+dev_handler.setFormatter(dev_formatter)
+dev_logger.addHandler(dev_handler)
+dev_logger.setLevel(logging.INFO)
+
+progress_logger= logging.getLogger("progress")
+progress_handler = logging.StreamHandler()
+progress_handler.setFormatter(ColoredFormatter("%(message)s"))
+progress_logger.addHandler(progress_handler)
+progress_logger.setLevel(logging.INFO)
 
 dev_mode = False
 
@@ -47,37 +51,37 @@ def set_dev_mode(mode: bool):
 
 def set_level(level):
     """set log level"""
-    logging.getLogger().setLevel(level)
+    dev_logger.setLevel(level)
 
 
 def debug(message):
     """debug log"""
     if dev_mode:
-        logging.debug(message)
+        dev_logger.debug(message)
 
 
 def info(message):
     """info log"""
     if dev_mode:
-        logging.info(message)
+        dev_logger.info(message)
 
 
 def warning(message):
     """warning log"""
     if dev_mode:
-        logging.warning(message)
+        dev_logger.warning(message)
 
 
 def error(message):
     """error log"""
     if dev_mode:
-        logging.error(message)
+        dev_logger.error(message)
 
 
 def critical(message):
     """critical log"""
     if dev_mode:
-        logging.critical(message)
+        dev_logger.critical(message)
 
 def color_print(message, **kwargs):
-    logging.info(message)
+    progress_logger.info(message)
