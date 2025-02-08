@@ -23,6 +23,15 @@ class RetrievalResult:
     def __repr__(self):
         return f"RetrievalResult(score={self.score}, embedding={self.embedding}, text={self.text}, reference={self.reference}), metadata={self.metadata}"
 
+def deduplicate_results(results: List[RetrievalResult]) -> List[RetrievalResult]:
+    all_text_set = set()
+    deduplicated_results = []
+    for result in results:
+        if result.text not in all_text_set:
+            all_text_set.add(result.text)
+            deduplicated_results.append(result)
+    return deduplicated_results
+
 class CollectionInfo:
     def __init__(self, collection_name: str, description: str):
         self.collection_name = collection_name

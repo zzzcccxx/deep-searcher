@@ -53,78 +53,38 @@ Critical Requirements:
 
 def get_reflect_prompt(
    question: str,
-   collections: List[str],
    mini_questions: List[str],
    mini_chuncks: List[str],
 ):
-    sections = []
-    common_prompt = f"""You are an AI expert in content judgment and analysis, and are good at judging whether there is a correlation between the question and the content. At present, we have the following information. The core needs to focus on solving the following main problem and analyzing whether other related problems and content are helpful to answer this question.
+    mini_chunk_str = ""
+    for i, chunk in enumerate(mini_chuncks):
+        mini_chunk_str += f"""<chunk_{i}>\n{chunk}\n</chunk_{i}>\n"""
+    reflect_prompt = f"""Determine whether additional search queries are needed based on the original query, previous sub queries, and all retrieved document chunks. If further research is required, provide a Python list of up to 3 search queries. If no further research is required, return an empty list.
 
-Main Question: {question}
-"""
-    sections.append(common_prompt)
+    Original Query: {question}
+    Previous Sub Queries: {mini_questions}
+    Related Chunks: 
+    {mini_chunk_str}
+    """
+   
     
-    related_set = []
-    for i, collection_name in enumerate(collections):
-        related_set.append(f"""Question {i}: {mini_questions[i]}
-Data Set Name: {collection_name}
-Related Content: {mini_chuncks[i]}
-""")
-    related_prompt = f"""The following is a series of related questions and their corresponding content.
-
-Related Questions And Content List:
-"""
-    sections.append(related_prompt + "\n".join(related_set))
-    
-    response_prompt = f"""Based on the above, please analyze whether the content of these related questions is related to the main question and whether it can help answer the main question.The output content is a json.
-    
-If the current related content is sufficient to accurately and completely answer the main question, an empty json is returned. Otherwise,
-
-according to the related content, all related questions and content are first analyzed to see if they are related to the question. The judgment result is stored in the first-level key of the json. The key is **related_content**, and the value is a sub-json. The key of this sub-json is the related question content, and the value is YES or NO. If the question and content are helpful in answering the main question, it is YES, otherwise NO. 
-
-After analyzing the association relationship, if the current relevant content of the question is not enough to answer the current question, please generate multiple related small questions. The result is stored in the first-level key of the json. The key is miss_questions, and the value is a string array.
-"""
-    sections.append(response_prompt)
-    
-    footer = """Respond exclusively in valid JSON format matching exact JSON schema.
-
-Critical Requirements:
-- Include ONLY ONE action type
-- Never add unsupported keys
-- Exclude all non-JSON text, markdown, or explanations
-- Maintain strict JSON syntax"""
-    sections.append(footer)
-    
-    return "\n\n".join(sections)
+    footer = """Respond exclusively in valid List of str format without any other text."""
+    return reflect_prompt + footer
 
 
 def get_final_answer_prompt(
    question: str, 
-   collections: List[str],
    mini_questions: List[str],
    mini_chuncks: List[str],
 ):
-    sections = []
-    common_prompt = f"""You are a AI content analysis expert, good at summarizing content. After many attempts, we have obtained the answers to the following questions. Please summarize a simple and clear answer based on the following series of related questions and their corresponding contents.
+    mini_chunk_str = ""
+    for i, chunk in enumerate(mini_chuncks):
+        mini_chunk_str += f"""<chunk_{i}>\n{chunk}\n</chunk_{i}>\n"""
+    summary_prompt = f"""You are a AI content analysis expert, good at summarizing content. Please summarize a specific and detailed answer or report based on the previous queries and the retrieved document chunks.
 
-Question: {question}
-"""
-    sections.append(common_prompt)
-    
-    data_set = []
-    for i, collection_name in enumerate(collections):
-        data_set.append(f"""Question {i}: {mini_questions[i]}
-Data Set Name: {collection_name}
-Origin Content: {mini_chuncks[i]}
-""")
-    data_set_prompt = f"""The following is a series of related questions and their corresponding content.
-
-Related Questions And Answers List:
-"""
-    sections.append(data_set_prompt + "\n".join(data_set))
-    
-    response_prompt = f"""Based on the above, please provide a simple, clear and complete answer to the question. The answers can only be rewritten by sentences, and the answers need to explain which dataset sources and original content this part refers to. No additional expansion, extension or explanation can be made.
-"""
-    sections.append(response_prompt)
-    
-    return "\n\n".join(sections)
+    Original Query: {question}
+    Previous Sub Queries: {mini_questions}
+    Related Chunks: 
+    {mini_chunk_str}
+    """
+    return summary_prompt

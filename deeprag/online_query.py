@@ -2,13 +2,14 @@ from deeprag import vector_db
 from deeprag.agent import generate_sub_queries, generate_gap_queries, generate_final_answer
 from deeprag.agent.search_vdb import search_chunks_from_vectordb
 from deeprag.configuration import Configuration, ModuleFactory
+from deeprag.vector_db.base import deduplicate_results
 # from deeprag.tools import search_chunks_from_vectordb
 
 
-def query(original_query: str, max_iter: int = 4) -> str:
+def query(original_query: str, max_iter: int = 3) -> str:
     
     print(f"Original query: {original_query}")
-    all_chunks = []
+    all_search_res = []
     all_sub_queries = []
 
     ### SUB QUERIES ###
@@ -21,15 +22,17 @@ def query(original_query: str, max_iter: int = 4) -> str:
 
     for iter in range(max_iter):
         print(f"Iteration: {iter + 1}")
-        chunks_from_vectordb = []
-        chunks_from_internet = []#TODO
+        search_res_from_vectordb = []
+        search_res_from_internet = []#TODO
         for query in sub_gap_queries:
-            chunks_from_vectordb.extend(search_chunks_from_vectordb(query))
-            # chunks_from_internet.extend(search_chunks_from_internet(query))# TODO
-        all_chunks.extend(chunks_from_vectordb + chunks_from_internet)
+            search_res_from_vectordb.extend(search_chunks_from_vectordb(query))
+            # search_res_from_internet.extend(search_chunks_from_internet(query))# TODO
+        search_res_from_vectordb = deduplicate_results(search_res_from_vectordb)
+        # search_res_from_internet = deduplicate_results(search_res_from_internet)
+        all_search_res.extend(search_res_from_vectordb + search_res_from_internet)
 
         ### REFLECTION & GET GAP QUERIES ###
-        sub_gap_queries = generate_gap_queries(original_query, all_sub_queries, all_chunks)
+        sub_gap_queries = generate_gap_queries(original_query, all_sub_queries, all_search_res)
         if not sub_gap_queries:
             print("No new search queries were generated. Exiting.")
             break
@@ -40,7 +43,8 @@ def query(original_query: str, max_iter: int = 4) -> str:
 
     ### GENERATE FINAL ANSWER ###
     print("Generating final answer...")
-    final_answer = generate_final_answer(original_query, all_chunks)
+    all_search_res = deduplicate_results(all_search_res)
+    final_answer = generate_final_answer(original_query, all_sub_queries, all_search_res)
     print("==== FINAL ANSWER====")
     print(final_answer)
     return final_answer

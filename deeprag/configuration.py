@@ -40,7 +40,7 @@ class Configuration:
             }
         }
         self.query_settings = {
-            "max_iter": 4
+            "max_iter": 3
         }
 
     def set_provider_config(self, feature: FeatureType, provider: str, provider_configs: dict):
