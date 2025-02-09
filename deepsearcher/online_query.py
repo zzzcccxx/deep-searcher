@@ -1,9 +1,9 @@
-from deeprag.agent import generate_sub_queries, generate_gap_queries, generate_final_answer
-from deeprag.agent.search_vdb import search_chunks_from_vectordb
-from deeprag.vector_db.base import deduplicate_results
-# from deeprag.configuration import vector_db, embedding_model, llm
-from deeprag import configuration
-from deeprag.tools import log
+from deepsearcher.agent import generate_sub_queries, generate_gap_queries, generate_final_answer
+from deepsearcher.agent.search_vdb import search_chunks_from_vectordb
+from deepsearcher.vector_db.base import deduplicate_results
+# from deepsearcher.configuration import vector_db, embedding_model, llm
+from deepsearcher import configuration
+from deepsearcher.tools import log
 
 
 def query(original_query: str, max_iter: int = 3) -> str:

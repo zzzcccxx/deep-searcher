@@ -1,10 +1,10 @@
 from typing import List
 
-# from deeprag.configuration import llm
-from deeprag.agent.prompt import get_final_answer_prompt
-from deeprag.vector_db.base import RetrievalResult
-from deeprag import configuration
-from deeprag.tools import log
+# from deepsearcher.configuration import llm
+from deepsearcher.agent.prompt import get_final_answer_prompt
+from deepsearcher.vector_db.base import RetrievalResult
+from deepsearcher import configuration
+from deepsearcher.tools import log
 
 def generate_final_answer(original_query: str, all_sub_queries: List[str], all_chunks: List[RetrievalResult]) -> str:
     llm = configuration.llm

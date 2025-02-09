@@ -1,6 +1,6 @@
 from typing import List
 from openai._types import NOT_GIVEN
-from deeprag.embedding.base import BaseEmbedding
+from deepsearcher.embedding.base import BaseEmbedding
 
 
 OPENAI_MODEL_DIM_MAP = {

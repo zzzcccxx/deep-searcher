@@ -3,9 +3,9 @@ from typing import List
 
 from tqdm import tqdm
 
-from deeprag.loader.splitter import split_docs_to_chunks
-# from deeprag.configuration import embedding_model, vector_db, file_loader
-from deeprag import configuration
+from deepsearcher.loader.splitter import split_docs_to_chunks
+# from deepsearcher.configuration import embedding_model, vector_db, file_loader
+from deepsearcher import configuration
 
 
 def load_from_local_files(paths_or_directory: str | List[str], collection_name: str = None, collection_description: str = None):

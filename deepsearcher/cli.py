@@ -1,8 +1,8 @@
 import argparse
 import logging
-from deeprag.configuration import Configuration, init_config
-from deeprag.online_query import query
-from deeprag.offline_loading import load_from_local_files, load_from_website
+from deepsearcher.configuration import Configuration, init_config
+from deepsearcher.online_query import query
+from deepsearcher.offline_loading import load_from_local_files, load_from_website
 
 httpx_logger = logging.getLogger("httpx")  # disable openai's logger output
 httpx_logger.setLevel(logging.WARNING)
@@ -15,7 +15,7 @@ def main():
     init_config(config = config)
 
     parser = argparse.ArgumentParser(
-        prog="deeprag", description="Deep RAG Agent."
+        prog="deepsearcher", description="Deep Searcher."
     )
     ## Arguments of query
     parser.add_argument(

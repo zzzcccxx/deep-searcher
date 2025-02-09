@@ -1,7 +1,7 @@
 import logging
-from deeprag.offline_loading import load_from_local_files
-from deeprag.online_query import query
-from deeprag.configuration import Configuration, init_config
+from deepsearcher.offline_loading import load_from_local_files
+from deepsearcher.online_query import query
+from deepsearcher.configuration import Configuration, init_config
 
 httpx_logger = logging.getLogger("httpx")  # disable openai's logger output
 httpx_logger.setLevel(logging.WARNING)

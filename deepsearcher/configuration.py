@@ -1,10 +1,10 @@
 from typing import Literal
 
-from deeprag.embedding.base import BaseEmbedding
-from deeprag.llm.base import BaseLLM
-from deeprag.loader.file_loader.base import BaseLoader
-from deeprag.loader.web_crawler.base import BaseCrawler
-from deeprag.vector_db.base import BaseVectorDB
+from deepsearcher.embedding.base import BaseEmbedding
+from deepsearcher.llm.base import BaseLLM
+from deepsearcher.loader.file_loader.base import BaseLoader
+from deepsearcher.loader.web_crawler.base import BaseCrawler
+from deepsearcher.vector_db.base import BaseVectorDB
 
 FeatureType = Literal["llm", "file_loader", "web_crawler", "vector_db"]
 
@@ -77,26 +77,26 @@ class ModuleFactory:
     def _create_module_instance(self, feature: FeatureType, module_name: str):
         # e.g.
         # feature = "file_loader"
-        # module_name = "deeprag.loader.file_loader"
+        # module_name = "deepsearcher.loader.file_loader"
         class_name = self.config.provide_settings[feature]["provider"]
         module = __import__(module_name, fromlist=[class_name])
         class_ = getattr(module, class_name)
         return class_(**self.config.provide_settings[feature]["config"])
     
     def create_llm(self) -> BaseLLM:
-        return self._create_module_instance("llm", "deeprag.llm")
+        return self._create_module_instance("llm", "deepsearcher.llm")
     
     def create_embedding(self) -> BaseEmbedding:
-        return self._create_module_instance("embedding", "deeprag.embedding")
+        return self._create_module_instance("embedding", "deepsearcher.embedding")
     
     def create_file_loader(self) -> BaseLoader:
-        return self._create_module_instance("file_loader", "deeprag.loader.file_loader")
+        return self._create_module_instance("file_loader", "deepsearcher.loader.file_loader")
     
     def create_web_crawler(self) -> BaseCrawler:
-        return self._create_module_instance("web_crawler", "deeprag.loader.web_crawler")
+        return self._create_module_instance("web_crawler", "deepsearcher.loader.web_crawler")
     
     def create_vector_db(self) -> BaseVectorDB:
-        return self._create_module_instance("vector_db", "deeprag.vector_db")
+        return self._create_module_instance("vector_db", "deepsearcher.vector_db")
     
 
 config = Configuration()

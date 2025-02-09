@@ -1,9 +1,9 @@
 import numpy as np
 from typing import List
 
-from deeprag.loader.splitter import Chunk
-from deeprag.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalResult
-from deeprag.tools import log
+from deepsearcher.loader.splitter import Chunk
+from deepsearcher.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalResult
+from deepsearcher.tools import log
 from pymilvus import MilvusClient, DataType
 
 

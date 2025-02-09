@@ -1,5 +1,5 @@
 from typing import List
-from deeprag.loader.file_loader.base import BaseLoader
+from deepsearcher.loader.file_loader.base import BaseLoader
 from langchain_core.documents import Document
 
 

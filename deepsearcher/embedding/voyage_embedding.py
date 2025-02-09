@@ -1,7 +1,7 @@
 import os
 from typing import List
 
-from deeprag.embedding.base import BaseEmbedding
+from deepsearcher.embedding.base import BaseEmbedding
 
 VOYAGE_MODEL_DIM_MAP = {
     "voyage-3-large": 1024,

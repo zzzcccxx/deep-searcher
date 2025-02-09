@@ -1,6 +1,6 @@
 from typing import List
 from langchain_core.documents import Document
-from deeprag.loader.file_loader.base import BaseLoader
+from deepsearcher.loader.file_loader.base import BaseLoader
 
 
 class TextLoader(BaseLoader):

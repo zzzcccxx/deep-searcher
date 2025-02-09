@@ -1,5 +1,5 @@
 from typing import Dict, List
-from deeprag.llm.base import BaseLLM, ChatResponse
+from deepsearcher.llm.base import BaseLLM, ChatResponse
 
 
 class OpenAI(BaseLLM):

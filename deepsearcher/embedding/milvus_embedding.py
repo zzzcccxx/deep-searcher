@@ -1,5 +1,5 @@
 from typing import List
-from deeprag.embedding.base import BaseEmbedding
+from deepsearcher.embedding.base import BaseEmbedding
 import numpy as np
 
 MILVUS_MODEL_DIM_MAP = {

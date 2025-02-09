@@ -1,8 +1,8 @@
 import unittest
 import pprint
 import numpy as np
-from deeprag.vector_db import Milvus, RetrievalResult
-from deeprag.tools import log
+from deepsearcher.vector_db import Milvus, RetrievalResult
+from deepsearcher.tools import log
 
 
 class TestMilvus(unittest.TestCase):

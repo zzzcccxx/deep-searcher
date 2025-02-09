@@ -1,10 +1,10 @@
 import ast
 from typing import List
 
-# from deeprag.configuration import llm
-from deeprag.agent.prompt import get_reflect_prompt
-from deeprag.vector_db.base import RetrievalResult
-from deeprag import configuration
+# from deepsearcher.configuration import llm
+from deepsearcher.agent.prompt import get_reflect_prompt
+from deepsearcher.vector_db.base import RetrievalResult
+from deepsearcher import configuration
 
 
 def generate_gap_queries(original_query: str, all_sub_queries: List[str], all_chunks: List[RetrievalResult]) -> List:

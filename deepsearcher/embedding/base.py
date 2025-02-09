@@ -2,7 +2,7 @@ from typing import List
 
 from tqdm import tqdm
 
-from deeprag.loader.splitter import Chunk
+from deepsearcher.loader.splitter import Chunk
 
 
 class BaseEmbedding:

@@ -1,6 +1,6 @@
 import unittest
-from deeprag.agent import prompt
-from deeprag.tools import log
+from deepsearcher.agent import prompt
+from deepsearcher.tools import log
 
 class TestPrompt(unittest.TestCase):
     def test_search_prompt(self):

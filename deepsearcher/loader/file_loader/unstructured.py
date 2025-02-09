@@ -2,8 +2,8 @@ import os
 import shutil
 from typing import List
 from langchain_core.documents import Document
-from deeprag.loader.file_loader.base import BaseLoader
-from deeprag.tools import log
+from deepsearcher.loader.file_loader.base import BaseLoader
+from deepsearcher.tools import log
 
 class UnstructuredLoader(BaseLoader):
     def __init__(self):

@@ -3,7 +3,7 @@ from typing import List
 
 import numpy as np
 
-from deeprag.loader.splitter import Chunk
+from deepsearcher.loader.splitter import Chunk
 
 class RetrievalResult:
     def __init__(

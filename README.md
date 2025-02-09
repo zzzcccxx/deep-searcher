@@ -1,8 +1,8 @@
-# Deep RAG Agent
+# Deep Searcher
 
-Deep RAG Agent combines Large Language Models (LLMs) and Vector Databases to perform search, evaluation, and reasoning based on private data, providing highly accurate answers. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
+Deep Searcher combines Large Language Models (LLMs) and Vector Databases to perform search, evaluation, and reasoning based on private data, providing highly accurate answers. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
 
-![Architecture](./assets/pic/deep-rag-agent-arch.png)
+![Architecture](./assets/pic/deep-searcher-arch.png)
 
 ## 🚀 Features
 
@@ -24,12 +24,12 @@ Deep RAG Agent combines Large Language Models (LLMs) and Vector Databases to per
 
 ```bash
 # Clone the repository
-git clone https://github.com/zilliztech/deep-rag-agent.git
+git clone https://github.com/zilliztech/deep-searcher.git
 
 # Recommended: Create a Python virtual environment
 
 # Install dependencies
-cd deep-rag-agent 
+cd deep-searcher 
 pip install -e .
 
 # Configure LLM or Milvus
@@ -39,7 +39,7 @@ code examples/example1.py
 python examples/example1.py
 ```
 
-💡 **Hint**: Refer to the `examples` directory to import your private data and build your customized Deep RAG Agent.
+💡 **Hint**: Refer to the `examples` directory to import your private data and build your customized Deep Searcher.
 
 ### Python Package Mode (Coming Soon)
 
@@ -73,4 +73,4 @@ python examples/example1.py
 - Add support for additional large models
 - Provide RESTful API interface
 
-We welcome contributions! Star & Fork the project and help us build a more powerful Deep RAG Agent! 🎯
+We welcome contributions! Star & Fork the project and help us build a more powerful Deep Searcher! 🎯

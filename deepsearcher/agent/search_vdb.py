@@ -1,10 +1,10 @@
 import ast
 from typing import List
 
-from deeprag.agent.prompt import get_vector_db_search_prompt
-# from deeprag.configuration import llm, embedding_model, vector_db
-from deeprag import configuration
-from deeprag.tools import log
+from deepsearcher.agent.prompt import get_vector_db_search_prompt
+# from deepsearcher.configuration import llm, embedding_model, vector_db
+from deepsearcher import configuration
+from deepsearcher.tools import log
 
 
 RERANK_PROMPT = """Based on the query questions and the retrieved chunk, to determine whether the chunk is helpful in answering any of the query question, you can only return "YES" or "NO", without any other information.
