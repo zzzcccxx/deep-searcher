@@ -29,7 +29,7 @@ class Configuration:
                 "config": {}
             },
             "web_crawler": {
-                "provider": "Firecrawl",
+                "provider": "FireCrawlCrawler",
                 "config": {}
             },
             "vector_db": {
@@ -106,13 +106,14 @@ llm: BaseLLM = None
 embedding_model: BaseEmbedding = None
 file_loader: BaseLoader = None
 vector_db: BaseVectorDB = None
+web_crawler: BaseCrawler = None
 
 
 def init_config(config: Configuration):
-    global module_factory, llm, embedding_model, file_loader, vector_db
+    global module_factory, llm, embedding_model, file_loader, vector_db, web_crawler
     module_factory = ModuleFactory(config)
     llm = module_factory.create_llm()
     embedding_model = module_factory.create_embedding()
     file_loader = module_factory.create_file_loader()
-    # web_crawler = module_factory.create_web_crawler()
+    web_crawler = module_factory.create_web_crawler()
     vector_db = module_factory.create_vector_db()
