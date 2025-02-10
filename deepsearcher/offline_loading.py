@@ -32,16 +32,4 @@ def load_from_local_files(paths_or_directory: str | List[str], collection_name: 
     
 
 def load_from_website(urls: str | List[str], collection_name: str = None, collection_description: str = None):
-    ... # TODO move to web_crawler package
-    # import os
-    # from firecrawl import FirecrawlApp
-    # if isinstance(urls, str):
-    #     urls = [urls]
-    # for url in urls:
-    #     app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
-    #     scrape_status = app.scrape_url(
-    #         url,
-    #         params={"formats": ["markdown"]},
-    #     )
-    #     markdown_content = scrape_status["markdown"]
-    #     print(markdown_content)
+    ... # TODO
