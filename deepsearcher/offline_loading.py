@@ -8,11 +8,13 @@ from deepsearcher.loader.splitter import split_docs_to_chunks
 from deepsearcher import configuration
 
 
-def load_from_local_files(paths_or_directory: str | List[str], collection_name: str = None, collection_description: str = None):
+def load_from_local_files(paths_or_directory: str | List[str], collection_name: str = None,
+                          collection_description: str = None):
     vector_db = configuration.vector_db
     embedding_model = configuration.embedding_model
     file_loader = configuration.file_loader
-    vector_db.init_collection(dim=embedding_model.dimension, collection=collection_name, description=collection_description, force_new_collection=True)
+    vector_db.init_collection(dim=embedding_model.dimension, collection=collection_name,
+                              description=collection_description, force_new_collection=True)
     if isinstance(paths_or_directory, str):
         paths_or_directory = [paths_or_directory]
     all_docs = []
@@ -29,7 +31,19 @@ def load_from_local_files(paths_or_directory: str | List[str], collection_name: 
     vector_db.insert_data(collection=collection_name, chunks=chunks)
 
 
-    
-
 def load_from_website(urls: str | List[str], collection_name: str = None, collection_description: str = None):
-    ... # TODO
+    vector_db = configuration.vector_db
+    embedding_model = configuration.embedding_model
+    web_crawler = configuration.web_crawler
+
+    vector_db.init_collection(dim=embedding_model.dimension, collection=collection_name,
+                              description=collection_description, force_new_collection=True)
+
+    all_docs = []
+    for url in tqdm(urls, desc="Loading from websites"):
+        docs = web_crawler.crawl_url(url)
+        all_docs.extend(docs)
+
+    chunks = split_docs_to_chunks(all_docs)
+    chunks = embedding_model.embed_chunks(chunks)
+    vector_db.insert_data(collection=collection_name, chunks=chunks)
