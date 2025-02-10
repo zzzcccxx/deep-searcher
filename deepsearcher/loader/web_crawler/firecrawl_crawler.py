@@ -22,8 +22,7 @@ class FireCrawlCrawler(BaseCrawler):
         )
 
         markdown_content = scrape_result.get('markdown', '')
-        source_url = scrape_result.get('metadata', {}).get('sourceURL', url)
         metadata = scrape_result.get('metadata', {})
-        metadata['reference'] = source_url
+        metadata['reference'] = url
 
         return [Document(page_content=markdown_content, metadata=metadata)]

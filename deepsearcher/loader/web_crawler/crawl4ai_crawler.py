@@ -44,9 +44,3 @@ class Crawl4AICrawler(BaseCrawler):
         except Exception as e:
             print(f"Error during crawling {url}: {e}")
             return []
-
-
-crawler = Crawl4AICrawler()
-res = crawler.crawl_url("https://lilianweng.github.io/posts/2023-06-23-agent/")
-print(res[0].metadata['title'])
-print(res[0].metadata['reference'])
