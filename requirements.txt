@@ -1,6 +1,6 @@
 argparse
 firecrawl-py
-langchain_core
+langchain_text_splitters
 pdfplumber
 pymilvus[model]
 openai

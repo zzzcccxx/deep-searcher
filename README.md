@@ -27,11 +27,15 @@ Install DeepSearcher using pip:
 git clone https://github.com/zilliztech/deep-searcher.git
 
 # Recommended: Create a Python virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
 
 # Install dependencies
 cd deep-searcher 
 pip install -e .
 ```
+Prepare your `OPENAI_API_KEY` in your environment variables. If you change the LLM in the configuration, make sure to prepare the corresponding API key.
+
 ### Quick start demo
 ```python
 from deepsearcher.configuration import Configuration, init_config
@@ -110,6 +114,8 @@ config.set_provider_config("llm", "TogetherAI", {"model": "deepseek-ai/DeepSeek-
 ### 🔹 LLM Support
 - DeepSeek
 - OpenAI
+- SiliconFlow
+- TogetherAI
 
 ### 🔹 Document Loader
 - Local File

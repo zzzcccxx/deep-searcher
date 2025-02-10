@@ -10,8 +10,10 @@ from deepsearcher import configuration
 
 def load_from_local_files(paths_or_directory: str | List[str], collection_name: str = None,
                           collection_description: str = None):
-    collection_name = collection_name.replace(" ", "_").replace("-", "_")
     vector_db = configuration.vector_db
+    if collection_name is None:
+        collection_name = vector_db.default_collection
+    collection_name = collection_name.replace(" ", "_").replace("-", "_")
     embedding_model = configuration.embedding_model
     file_loader = configuration.file_loader
     vector_db.init_collection(dim=embedding_model.dimension, collection=collection_name,

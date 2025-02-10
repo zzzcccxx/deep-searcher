@@ -33,9 +33,12 @@ def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
     # except:
         # log.color_print(f"Failed to parse response: {response_content}\nReturning empty list.")
     
-    # If a collection description is not provided, use the query as the search query
     for collection_info in collection_infos:
+        # If a collection description is not provided, use the query as the search query
         if not collection_info.description:
+            collection_2_query[collection_info.collection_name] = query
+        # If the default collection exists, use the query as the search query
+        if vector_db.default_collection == collection_info.collection_name:
             collection_2_query[collection_info.collection_name] = query
     log.color_print(f"<think> Perform search [{query}] on the vector DB collections: {list(collection_2_query.keys())} </think>\n")
     all_retrieved_results = []
@@ -56,7 +59,7 @@ def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
             log.color_print(f"<search> Accept {accepted_chunk_num} document chunk(s) from references: {references} </search>\n")
     return all_retrieved_results
     
-    # vector_db.search_data(collection="deep_rag", vector=query_embedding)
+    # vector_db.search_data(collection="deepsearcher", vector=query_embedding)
 
 
     
