@@ -20,8 +20,8 @@ DeepSearcher combines powerful LLMs (DeepSeek, OpenAI, etc.) and Vector Database
 
 ## 📖 Quick Start
 
-### Local Mode
-
+### Installation
+Install DeepSearcher using pip:
 ```bash
 # Clone the repository
 git clone https://github.com/zilliztech/deep-searcher.git
@@ -31,17 +31,70 @@ git clone https://github.com/zilliztech/deep-searcher.git
 # Install dependencies
 cd deep-searcher 
 pip install -e .
-
-# Configure LLM or Milvus
-code examples/example1.py
-
-# Prepare data and run an example
-python examples/example1.py
 ```
+### Quick start demo
+```python
+from deepsearcher.configuration import Configuration, init_config
+from deepsearcher.online_query import query
 
-💡 **Hint**: Refer to the `examples` directory to import your private data and build your customized DeepSearcher.
+config = Configuration()
 
-### Python Package Mode (Coming Soon)
+# Customize your config here,
+# more configuration see the Configuration Details section below.
+config.set_provider_config("llm", "OpenAI", {"model": "gpt-4o-mini"})
+init_config(config = config)
+
+# Load your local data
+from deepsearcher.offline_loading import load_from_local_files
+load_from_local_files(paths_or_directory=your_local_path)
+
+# Query
+result = query("Write a report about xxx.") # Your question here
+```
+### Configuration Details:
+#### LLM Configuration
+
+  <pre><code>
+config.set_provider_config("llm", "(LLMName)", "(Arguments dict)")
+</code></pre>
+<p>The "LLMName" can be one of the following: ["DeepSeek", "OpenAI", "SiliconFlow", "TogetherAI"]</p>
+<p> The "Arguments dict" is a dictionary that contains the necessary arguments for the LLM class.</p>
+
+<details>
+  <summary>Example (OpenAI)</summary>
+    <pre><code>
+config.set_provider_config("llm", "OpenAI", {"model": "gpt-4o"})
+    </code></pre>
+    <p> More details about OpenAI models: https://platform.openai.com/docs/models </p>
+</details>
+
+<details>
+  <summary>Example (DeepSeek from official)</summary>
+    <pre><code>
+config.set_provider_config("llm", "DeepSeek", {"model": "deepseek-chat"})
+    </code></pre>
+    <p> More details about DeepSeek: https://api-docs.deepseek.com/ </p>
+</details>
+
+<details>
+  <summary>Example (DeepSeek from SiliconFlow)</summary>
+    <pre><code>
+config.set_provider_config("llm", "SiliconFlow", {"model": "deepseek-ai/DeepSeek-V3"})
+    </code></pre>
+    <p> More details about SiliconFlow: https://docs.siliconflow.cn/quickstart </p>
+</details>
+
+<details>
+  <summary>Example (DeepSeek from TogetherAI)</summary>
+    <pre><code>
+config.set_provider_config("llm", "TogetherAI", {"model": "deepseek-ai/DeepSeek-V3"})
+    </code></pre>
+    <p> More details about TogetherAI: https://www.together.ai/ </p>
+</details>
+
+
+
+
 
 ### Python CLI Mode (Coming Soon)
 

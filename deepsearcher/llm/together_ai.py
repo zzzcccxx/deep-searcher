@@ -3,6 +3,7 @@ from deepsearcher.llm.base import BaseLLM, ChatResponse
 
 
 class TogetherAI(BaseLLM):
+    """https://www.together.ai/"""
     def __init__(self, model: str = "deepseek-ai/DeepSeek-V3"):
         from together import Together
         self.model = model
