@@ -8,7 +8,7 @@ from deepsearcher.tools import log
 class TestMilvus(unittest.TestCase):
     def test_milvus(self):
         d = 8
-        collection = "hellp_deep_rag"
+        collection = "hellp_deepsearcher"
         milvus = Milvus()
         milvus.init_db(
             dim=d,
@@ -47,7 +47,7 @@ class TestMilvus(unittest.TestCase):
 
     def test_clear_collection(self):
         d = 8
-        collection = "deep_rag"
+        collection = "deepsearcher"
         milvus = Milvus()
         milvus.init_db(
             dim=d,

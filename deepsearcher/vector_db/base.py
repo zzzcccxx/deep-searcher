@@ -39,6 +39,14 @@ class CollectionInfo:
 
 
 class BaseVectorDB(ABC):
+    def __init__(
+            self,
+            default_collection: str = "deepsearcher",
+            *args,
+            **kwargs,
+    ):
+        self.default_collection = default_collection
+
     @abstractmethod
     def init_collection(self, dim: int, collection: str, description: str, force_new_collection=False, *args, **kwargs):
         pass

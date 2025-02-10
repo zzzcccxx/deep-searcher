@@ -11,9 +11,11 @@ class FireCrawlCrawler(BaseCrawler):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
+
 
     def crawl_url(self, url: str) -> List[Document]:
+        # Lazy init
+        self.app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
         scrape_result = self.app.scrape_url(
             url,
             params={"formats": ["markdown"]},

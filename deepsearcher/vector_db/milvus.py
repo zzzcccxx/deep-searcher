@@ -1,5 +1,5 @@
 import numpy as np
-from typing import List
+from typing import List, Optional
 
 from deepsearcher.loader.splitter import Chunk
 from deepsearcher.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalResult
@@ -14,18 +14,21 @@ class Milvus(BaseVectorDB):
 
     def __init__(
         self,
+        default_collection: str = "deepsearcher",
         uri: str = "http://localhost:19530",
         token: str = "root:Milvus",
         db: str = "default",
     ):
+        super().__init__(default_collection)
+        self.default_collection = default_collection
         self.client = MilvusClient(uri=uri, token=token, db_name=db, timeout=30)
 
 
     def init_collection(
         self,
         dim: int,
-        collection: str = "deep_rag",
-        description: str = "",
+        collection: Optional[str] = "deepsearcher",
+        description: Optional[str] = "",
         force_new_collection: bool = False,
         text_max_length: int = 65_535,
         reference_max_length: int = 2048,
@@ -33,6 +36,10 @@ class Milvus(BaseVectorDB):
         *args,
         **kwargs,
     ):
+        if not collection:
+            collection = self.default_collection
+        if description is None:
+            description = ""
         try:
             has_collection = self.client.has_collection(collection, timeout=5)
             if force_new_collection and has_collection:
@@ -60,7 +67,9 @@ class Milvus(BaseVectorDB):
         except Exception as e:
             log.critical(f"fail to init db for milvus, error info: {e}")
 
-    def insert_data(self, collection: str, chunks: List[Chunk], *args, **kwargs):
+    def insert_data(self, collection: Optional[str], chunks: List[Chunk], *args, **kwargs):
+        if not collection:
+            collection = self.default_collection
         texts = [chunk.text for chunk in chunks]
         references = [chunk.reference for chunk in chunks]
         metadatas = [chunk.metadata for chunk in chunks]
@@ -83,8 +92,10 @@ class Milvus(BaseVectorDB):
             log.critical(f"fail to insert data, error info: {e}")
 
     def search_data(
-        self, collection: str, vector: np.array | List[float], top_k: int = 5, *args, **kwargs
+        self, collection: Optional[str], vector: np.array | List[float], top_k: int = 5, *args, **kwargs
     ) -> List[RetrievalResult]:
+        if not collection:
+            collection = self.default_collection
         try:
             search_results = self.client.search(
                 collection_name=collection,
@@ -124,7 +135,9 @@ class Milvus(BaseVectorDB):
             log.critical(f"fail to list collections, error info: {e}")
         return collection_infos
 
-    def clear_db(self, collection: str = "deep_rag", *args, **kwargs):
+    def clear_db(self, collection: str = "deepsearcher", *args, **kwargs):
+        if not collection:
+            collection = self.default_collection
         try:
             self.client.drop_collection(collection)
         except Exception as e:
