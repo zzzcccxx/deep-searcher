@@ -1,6 +1,6 @@
-# Deep Searcher
+# DeepSearcher
 
-Deep Searcher combines Large Language Models (LLMs) and Vector Databases to perform search, evaluation, and reasoning based on private data, providing highly accurate answers. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
+DeepSearcher combines powerful LLMs (DeepSeek, OpenAI, etc.) and Vector Databases (Milvus, etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answer and comprehensive report. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
 
 ![Architecture](./assets/pic/deep-searcher-arch.png)
 
@@ -39,7 +39,7 @@ code examples/example1.py
 python examples/example1.py
 ```
 
-💡 **Hint**: Refer to the `examples` directory to import your private data and build your customized Deep Searcher.
+💡 **Hint**: Refer to the `examples` directory to import your private data and build your customized DeepSearcher.
 
 ### Python Package Mode (Coming Soon)
 
@@ -73,4 +73,4 @@ python examples/example1.py
 - Add support for additional large models
 - Provide RESTful API interface
 
-We welcome contributions! Star & Fork the project and help us build a more powerful Deep Searcher! 🎯
+We welcome contributions! Star & Fork the project and help us build a more powerful DeepSearcher! 🎯

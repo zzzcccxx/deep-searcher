@@ -6,7 +6,7 @@ from deepsearcher.loader.file_loader.base import BaseLoader
 from deepsearcher.loader.web_crawler.base import BaseCrawler
 from deepsearcher.vector_db.base import BaseVectorDB
 
-FeatureType = Literal["llm", "file_loader", "web_crawler", "vector_db"]
+FeatureType = Literal["llm", "embedding", "file_loader", "web_crawler", "vector_db"]
 
 class Configuration:
     def __init__(self):
