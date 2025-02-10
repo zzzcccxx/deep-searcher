@@ -15,7 +15,7 @@ Deep Searcher combines Large Language Models (LLMs) and Vector Databases to perf
 ---
 
 ## 🎉 Demo
-Coming Soon!
+![demo](./assets/pic/demo.gif)
 
 
 ## 📖 Quick Start
