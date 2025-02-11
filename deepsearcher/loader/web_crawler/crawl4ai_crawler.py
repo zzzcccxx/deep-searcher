@@ -2,7 +2,6 @@ import asyncio
 from typing import List
 from langchain_core.documents import Document
 from deepsearcher.loader.web_crawler.base import BaseCrawler
-from crawl4ai import AsyncWebCrawler
 
 
 class Crawl4AICrawler(BaseCrawler):
@@ -11,6 +10,7 @@ class Crawl4AICrawler(BaseCrawler):
         self.crawler = None  # Lazy init
 
     def _lazy_init(self):
+        from crawl4ai import AsyncWebCrawler
         if self.crawler is None:
             self.crawler = AsyncWebCrawler()
 

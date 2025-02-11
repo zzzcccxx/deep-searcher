@@ -58,43 +58,59 @@ result = query("Write a report about xxx.") # Your question here
 ### Configuration Details:
 #### LLM Configuration
 
-  <pre><code>
-config.set_provider_config("llm", "(LLMName)", "(Arguments dict)")
-</code></pre>
+  <pre><code>config.set_provider_config("llm", "(LLMName)", "(Arguments dict)")</code></pre>
 <p>The "LLMName" can be one of the following: ["DeepSeek", "OpenAI", "SiliconFlow", "TogetherAI"]</p>
 <p> The "Arguments dict" is a dictionary that contains the necessary arguments for the LLM class.</p>
 
 <details>
   <summary>Example (OpenAI)</summary>
-    <pre><code>
-config.set_provider_config("llm", "OpenAI", {"model": "gpt-4o"})
-    </code></pre>
+    <pre><code>config.set_provider_config("llm", "OpenAI", {"model": "gpt-4o"})</code></pre>
     <p> More details about OpenAI models: https://platform.openai.com/docs/models </p>
 </details>
 
 <details>
   <summary>Example (DeepSeek from official)</summary>
-    <pre><code>
-config.set_provider_config("llm", "DeepSeek", {"model": "deepseek-chat"})
-    </code></pre>
+    <pre><code>config.set_provider_config("llm", "DeepSeek", {"model": "deepseek-chat"})</code></pre>
     <p> More details about DeepSeek: https://api-docs.deepseek.com/ </p>
 </details>
 
 <details>
   <summary>Example (DeepSeek from SiliconFlow)</summary>
-    <pre><code>
-config.set_provider_config("llm", "SiliconFlow", {"model": "deepseek-ai/DeepSeek-V3"})
-    </code></pre>
+    <pre><code>config.set_provider_config("llm", "SiliconFlow", {"model": "deepseek-ai/DeepSeek-V3"})</code></pre>
     <p> More details about SiliconFlow: https://docs.siliconflow.cn/quickstart </p>
 </details>
 
 <details>
   <summary>Example (DeepSeek from TogetherAI)</summary>
-    <pre><code>
-config.set_provider_config("llm", "TogetherAI", {"model": "deepseek-ai/DeepSeek-V3"})
-    </code></pre>
+    <pre><code>config.set_provider_config("llm", "TogetherAI", {"model": "deepseek-ai/DeepSeek-V3"})</code></pre>
     <p> More details about TogetherAI: https://www.together.ai/ </p>
 </details>
+
+#### Embedding Model Configuration
+<pre><code>config.set_embedding_config("embedding", "(EmbeddingModelName)", "(Arguments dict)")</code></pre>
+<p>The "EmbeddingModelName" can be one of the following: ["MilvusEmbedding", "OpenAIEmbedding", "VoyageEmbedding"]</p>
+<p> The "Arguments dict" is a dictionary that contains the necessary arguments for the embedding model class.</p>
+
+<details>
+  <summary>Example (Pymilvus built-in embedding model)</summary>
+    <pre><code>config.set_embedding_config("embedding", "MilvusEmbedding", {"model": "BAAI/bge-base-en-v1.5"})</code></pre>
+    <p> More details about Pymilvus: https://milvus.io/docs/embeddings.md </p>
+</details>
+
+<details>
+  <summary>Example (OpenAI embedding)</summary>
+    <pre><code>config.set_embedding_config("embedding", "OpenAIEmbedding", {"model": "text-embedding-3-small"})</code></pre>
+    <p> More details about OpenAI models: https://platform.openai.com/docs/guides/embeddings/use-cases </p>
+</details>
+
+<details>
+  <summary>Example (VoyageAI embedding)</summary>
+    <pre><code>config.set_embedding_config("embedding", "VoyageEmbedding", {"model": "voyage-3"})</code></pre>
+    <p> More details about VoyageAI: https://docs.voyageai.com/embeddings/ </p>
+</details>
+
+
+
 
 
 

@@ -8,9 +8,10 @@ MILVUS_MODEL_DIM_MAP = {
     "BAAI/bge-small-en-v1.5": 384,
     "BAAI/bge-large-zh-v1.5": 1024,
     "BAAI/bge-base-zh-v1.5": 768,
-    "BAAI/bge-small-zh-v1.5": 384, 
-    "all-MiniLM-L6-v2": 384,
-    "default": 384,
+    "BAAI/bge-small-zh-v1.5": 384,
+    "GPTCache/paraphrase-albert-onnx": 768,
+    "default": 768,  # 'GPTCache/paraphrase-albert-onnx',
+    # see https://github.com/milvus-io/milvus-model/blob/4974e2d190169618a06359bcda040eaed73c4d0f/src/pymilvus/model/dense/onnx.py#L12
 }
 
 
@@ -18,7 +19,7 @@ class MilvusEmbedding(BaseEmbedding):
     def __init__(self, model_name: str=None) -> None:
         from pymilvus import model
 
-        if not model_name or model_name in ["default", "all-MiniLM-L6-v2"]:
+        if not model_name or model_name in ["default", "GPTCache/paraphrase-albert-onnx"]:
             self.model = model.DefaultEmbeddingFunction()
         
         else:
