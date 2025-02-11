@@ -26,6 +26,7 @@ class MilvusEmbedding(BaseEmbedding):
             if model_name.startswith("BAAI/"):
                 self.model = model.dense.SentenceTransformerEmbeddingFunction(model_name)
             else:
+                # Only support default model and BGE series model
                 raise ValueError(f"Currently unsupported model name: {model_name}")
     
     def embed_query(self, text: str) -> List[float]:
