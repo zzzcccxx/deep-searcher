@@ -24,8 +24,8 @@ def main():
     parser.add_argument(
         "--max_iter",
         type=int,
-        default=8,
-        help="Max iterations of reflection. Default is 8.",
+        default=3,
+        help="Max iterations of reflection. Default is 3.",
     )
 
     ## Arguments of loading
