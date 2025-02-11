@@ -116,7 +116,29 @@ result = query("Write a report about xxx.") # Your question here
 
 
 
-### Python CLI Mode (Coming Soon)
+### Python CLI Mode
+#### Load
+```shell
+deepsearcher --load "your_local_path_or_url"
+```
+Example loading from local file:
+```shell
+deepsearcher --load "/path/to/your/local/file.pdf"
+```
+Example loading from url:
+```shell
+deepsearcher --load "https://www.wikiwand.com/en/articles/DeepSeek"
+```
+
+#### Query
+```shell
+deepsearcher --query "Write a report about xxx."
+```
+
+More help information
+```shell
+deepsearcher --help
+```
 
 ---
 
