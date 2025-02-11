@@ -31,8 +31,14 @@ class OpenAIEmbedding(BaseEmbedding):
         self.model_name = model_name
 
     def embed_query(self, text:str, dimensions=NOT_GIVEN) -> List[float]:
-        text = text.replace("\n", " ")
+        # text = text.replace("\n", " ")
         return self.client.embeddings.create(input=[text], model=self.model_name, dimensions=dimensions).data[0].embedding
+
+    def embed_documents(self, texts: List[str], dimensions=NOT_GIVEN) -> List[List[float]]:
+        res = self.client.embeddings.create(input=texts, model=self.model_name, dimensions=dimensions)
+        res = [r.embedding for r in res.data]
+        return res
+
     @property
     def dimension(self) -> int:
         return OPENAI_MODEL_DIM_MAP[self.model_name]
