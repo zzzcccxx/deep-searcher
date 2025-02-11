@@ -35,6 +35,8 @@ def load_from_local_files(paths_or_directory: str | List[str], collection_name: 
 
 
 def load_from_website(urls: str | List[str], collection_name: str = None, collection_description: str = None):
+    if isinstance(urls, str):
+        urls = [urls]
     vector_db = configuration.vector_db
     embedding_model = configuration.embedding_model
     web_crawler = configuration.web_crawler

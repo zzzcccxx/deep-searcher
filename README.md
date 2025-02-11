@@ -52,6 +52,10 @@ init_config(config = config)
 from deepsearcher.offline_loading import load_from_local_files
 load_from_local_files(paths_or_directory=your_local_path)
 
+# (Optional) Load from web crawling (`FIRECRAWL_API_KEY` env variable required)
+from deepsearcher.offline_loading import load_from_website
+load_from_website(urls=website_url)
+
 # Query
 result = query("Write a report about xxx.") # Your question here
 ```
@@ -125,7 +129,8 @@ Example loading from local file:
 ```shell
 deepsearcher --load "/path/to/your/local/file.pdf"
 ```
-Example loading from url:
+Example loading from url (*Set `FIRECRAWL_API_KEY` in your environment variables, see [FireCrawl](https://docs.firecrawl.dev/introduction) for more details*):
+
 ```shell
 deepsearcher --load "https://www.wikiwand.com/en/articles/DeepSeek"
 ```
@@ -145,22 +150,26 @@ deepsearcher --help
 ## 🔧 Module Support
 
 ### 🔹 Embedding Models
-- Pymilvus built-in embedding model
-- OpenAI
-- VoyageAI
+- [Pymilvus built-in embedding model](https://milvus.io/docs/embeddings.md)
+- [OpenAI](https://platform.openai.com/docs/guides/embeddings/use-cases) (`OPENAI_API_KEY` env variable required)
+- [VoyageAI](https://docs.voyageai.com/embeddings/) (`VOYAGE_API_KEY` env variable required)
 
 ### 🔹 LLM Support
-- DeepSeek
-- OpenAI
-- SiliconFlow
-- TogetherAI
+- [DeepSeek](https://api-docs.deepseek.com/) (`DEEPSEEK_API_KEY` env variable required)
+- [OpenAI](https://platform.openai.com/docs/models) (`OPENAI_API_KEY` env variable required)
+- [SiliconFlow](https://docs.siliconflow.cn/en/userguide/introduction) (`SILICONFLOW_API_KEY` env variable required)
+- [TogetherAI](https://docs.together.ai/docs/introduction) (`TOGETHER_API_KEY` env variable required)
 
 ### 🔹 Document Loader
 - Local File
-- Web Crawler (Under Development)
-
+  - PDF(with txt/md) loader
+  - [Unstructured](https://unstructured.io/) (under development) (`UNSTRUCTURED_API_KEY` and `UNSTRUCTURED_URL` env variables required)
+- Web Crawler
+  - [FireCrawl](https://docs.firecrawl.dev/introduction) (`FIRECRAWL_API_KEY` env variable required)
+  - [Jina Reader](https://jina.ai/reader/) (`JINA_API_TOKEN` env variable required)
+  - [Crawl4AI](https://docs.crawl4ai.com/)
 ### 🔹 Vector Database Support
-- Milvus
+- [Milvus](https://milvus.io/) (the same as [Zilliz](https://www.zilliz.com/))
 
 ---
 
