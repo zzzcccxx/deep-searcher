@@ -9,7 +9,7 @@ from deepsearcher import configuration
 
 
 def load_from_local_files(paths_or_directory: str | List[str], collection_name: str = None,
-                          collection_description: str = None):
+                          collection_description: str = None, force_new_collection: bool = False):
     vector_db = configuration.vector_db
     if collection_name is None:
         collection_name = vector_db.default_collection
@@ -17,7 +17,7 @@ def load_from_local_files(paths_or_directory: str | List[str], collection_name: 
     embedding_model = configuration.embedding_model
     file_loader = configuration.file_loader
     vector_db.init_collection(dim=embedding_model.dimension, collection=collection_name,
-                              description=collection_description, force_new_collection=True)
+                              description=collection_description, force_new_collection=force_new_collection)
     if isinstance(paths_or_directory, str):
         paths_or_directory = [paths_or_directory]
     all_docs = []
@@ -34,7 +34,7 @@ def load_from_local_files(paths_or_directory: str | List[str], collection_name: 
     vector_db.insert_data(collection=collection_name, chunks=chunks)
 
 
-def load_from_website(urls: str | List[str], collection_name: str = None, collection_description: str = None):
+def load_from_website(urls: str | List[str], collection_name: str = None, collection_description: str = None, force_new_collection: bool = False):
     if isinstance(urls, str):
         urls = [urls]
     vector_db = configuration.vector_db
@@ -42,7 +42,7 @@ def load_from_website(urls: str | List[str], collection_name: str = None, collec
     web_crawler = configuration.web_crawler
 
     vector_db.init_collection(dim=embedding_model.dimension, collection=collection_name,
-                              description=collection_description, force_new_collection=True)
+                              description=collection_description, force_new_collection=force_new_collection)
 
     all_docs = []
     for url in tqdm(urls, desc="Loading from websites"):
