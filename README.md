@@ -167,7 +167,7 @@ deepsearcher --help
 - Web Crawler
   - [FireCrawl](https://docs.firecrawl.dev/introduction) (`FIRECRAWL_API_KEY` env variable required)
   - [Jina Reader](https://jina.ai/reader/) (`JINA_API_TOKEN` env variable required)
-  - [Crawl4AI](https://docs.crawl4ai.com/)
+  - [Crawl4AI](https://docs.crawl4ai.com/) (You should run command `crawl4ai-setup` for the first time)
 ### 🔹 Vector Database Support
 - [Milvus](https://milvus.io/) (the same as [Zilliz](https://www.zilliz.com/))
 

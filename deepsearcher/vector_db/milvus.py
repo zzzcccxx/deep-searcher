@@ -64,6 +64,7 @@ class Milvus(BaseVectorDB):
                 index_params=index_params,
                 consistency_level="Strong",
             )
+            log.color_print(f"create collection [{collection}] successfully")
         except Exception as e:
             log.critical(f"fail to init db for milvus, error info: {e}")
 
