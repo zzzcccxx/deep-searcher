@@ -4,9 +4,10 @@ from deepsearcher.vector_db.base import deduplicate_results
 # from deepsearcher.configuration import vector_db, embedding_model, llm
 from deepsearcher import configuration
 from deepsearcher.tools import log
+import asyncio
 
 
-def query(original_query: str, max_iter: int = 3) -> str:
+async def async_query(original_query: str, max_iter: int = 3) -> str:
     
     log.color_print(f"<query> {original_query} </query>\n")
     all_search_res = []
@@ -25,10 +26,16 @@ def query(original_query: str, max_iter: int = 3) -> str:
     for iter in range(max_iter):
         log.color_print(f">> Iteration: {iter + 1}\n")
         search_res_from_vectordb = []
-        search_res_from_internet = []#TODO
-        for query in sub_gap_queries:
-            search_res_from_vectordb.extend(search_chunks_from_vectordb(query, sub_gap_queries))
-            # search_res_from_internet.extend(search_chunks_from_internet(query))# TODO
+        search_res_from_internet = []  # TODO
+        
+        # Create all search tasks
+        search_tasks = [search_chunks_from_vectordb(query, sub_gap_queries) for query in sub_gap_queries]
+        # Execute all tasks in parallel and wait for results
+        search_results = await asyncio.gather(*search_tasks)
+        # Merge all results
+        for result in search_results:
+            search_res_from_vectordb.extend(result)
+            
         search_res_from_vectordb = deduplicate_results(search_res_from_vectordb)
         # search_res_from_internet = deduplicate_results(search_res_from_internet)
         all_search_res.extend(search_res_from_vectordb + search_res_from_internet)
@@ -87,3 +94,7 @@ def naive_rag_query(query: str, collection: str=None, top_k=10):
     """
     char_response = llm.chat([{"role": "user", "content": summary_prompt}])
     return char_response.content
+
+# Add a wrapper function to support synchronous calls
+def query(original_query: str, max_iter: int = 3) -> str:
+    return asyncio.run(async_query(original_query, max_iter))
