@@ -5,6 +5,7 @@ from .siliconflow import SiliconFlow
 from .azure_openai import AzureOpenAI
 from .gemini import Gemini
 from .grok import Grok
+from .glm import GLM
 
 __all__ = [
     "DeepSeek",
@@ -14,4 +15,5 @@ __all__ = [
     "AzureOpenAI",
     "Gemini",
     "Grok",
+    "GLM",
 ]
